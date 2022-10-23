@@ -1,2 +1,9 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import { prefetchRoutes } from '$app/navigation';
+	import type { PageData } from '../../.svelte-kit/types/src/routes/$types';
+	export let data: PageData;
+</script>
+
+{#each data.routes as route}
+	<p>{route.route_name} - {route.grade}</p>
+{/each}
