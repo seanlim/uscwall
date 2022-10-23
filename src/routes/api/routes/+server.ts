@@ -15,19 +15,7 @@ async function createGoogleSheetsClient(): Promise<sheets_v4.Sheets> {
 	return sheets;
 }
 
-type Route = {
-	image_url: string;
-	grade: string;
-	route_type: string;
-	route_name: string;
-	setter_name: string;
-	setter_handle: string;
-	date_time: Date;
-	uuid: string;
-	ascents: number;
-};
-
-function buildRoute(data: string[]): Route {
+function buildRoute(data: string[]): App.Route {
 	return {
 		image_url: data[0],
 		grade: data[1],
