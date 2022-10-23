@@ -150,6 +150,15 @@
     esbuild "^0.15.7"
     set-cookie-parser "^2.4.8"
 
+"@sveltejs/adapter-netlify@^1.0.0-next.81":
+  version "1.0.0-next.81"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-netlify/-/adapter-netlify-1.0.0-next.81.tgz#8592bcc07414008938e880c2ce5c82ffe657f4a5"
+  integrity sha512-jWZHw2uqUMJk8lFPzRm0xxmBZoDc430tbeCU9EtYhG+ypze2B6pJAlNTtcN3/J7wapHq19TgEK5oNt4LqORfNg==
+  dependencies:
+    "@iarna/toml" "^2.2.5"
+    esbuild "^0.15.7"
+    set-cookie-parser "^2.4.8"
+
 "@sveltejs/adapter-vercel@1.0.0-next.80":
   version "1.0.0-next.80"
   resolved "https://registry.npmjs.org/@sveltejs/adapter-vercel/-/adapter-vercel-1.0.0-next.80.tgz#8ac660d94e9859f84a4a568123ec1c84ad020d75"
