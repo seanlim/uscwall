@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { goto, prefetch } from '$app/navigation';
+	import { resolveTag } from '../helpers';
 	import { writable } from 'svelte/store';
-	import Nav from '../components/Nav.svelte';
 
 	let routes = writable<App.Route[]>([]);
 
@@ -44,71 +45,56 @@
 			throw new Error(data);
 		}
 	}
-
-	function resolveTag(grade: string) {
-		if (grade.includes('V2')) {
-			return 'is-primary';
-		}
-		if (grade.includes('V3')) {
-			return 'is-info';
-		}
-		if (grade.includes('V5')) {
-			return 'is-danger';
-		}
-		// defaults to V0
-	}
 </script>
 
-<Nav />
-<div class="container">
-	{#await fetchRoutes()}
-		loading...
-	{:then data}
-		<div class="level">
-			<input
-				class="input is-rounded"
-				type="text"
-				placeholder="Search..."
-				bind:value={searchQuery}
-			/>
-			<div class="select is-rounded">
-				<select bind:value={gradeFilter}>
-					<option value="*" selected>All grades</option>
-					{#each data.grades as grade}
-						<option value={grade}>{grade}</option>
-					{/each}
-				</select>
-			</div>
-			<div class="select is-rounded">
-				<select bind:value={sectorFilter}>
-					<option value="*" selected>All Sectors</option>
-					{#each data.sectors as sector}
-						<option value={sector}>{sector}</option>
-					{/each}
-				</select>
-			</div>
-			<button class="button" on:click={reset}>Reset</button>
+{#await fetchRoutes()}
+	loading...
+{:then data}
+	<div class="level">
+		<input class="input is-rounded" type="text" placeholder="Search..." bind:value={searchQuery} />
+		<div class="select is-rounded">
+			<select bind:value={gradeFilter}>
+				<option value="*" selected>All grades</option>
+				{#each data.grades as grade}
+					<option value={grade}>{grade}</option>
+				{/each}
+			</select>
 		</div>
-		<hr />
-		<div class="box">
-			{#each filteredRoutes as route}
-				<div class="route" on:click={() => window.open(route.image_url, '_blank')}>
-					<h3 class="title is-5">
+		<div class="select is-rounded">
+			<select bind:value={sectorFilter}>
+				<option value="*" selected>All Sectors</option>
+				{#each data.sectors as sector}
+					<option value={sector}>{sector}</option>
+				{/each}
+			</select>
+		</div>
+		<button class="button" on:click={reset}>Reset</button>
+	</div>
+	<hr />
+	<div class="box">
+		{#each filteredRoutes as route}
+			<div
+				class="route"
+				on:mouseenter={() => prefetch(`/v/${route.id}`)}
+				on:mouseup={() => goto(`/v/${route.id}`)}
+			>
+				<h3 class="title is-5">
+					<a href={`/v/${route.id}`}>
 						{route.route_name}
-						<span class={`tag ${resolveTag(route.grade)} is-light`}>
-							{route.grade}
-						</span>
-					</h3>
-					<p class="subtitle is-6">
-						Set by {route.setter_name} ({route.setter_handle})
-					</p>
-				</div>
-			{/each}
-		</div>
-	{:catch err}
-		{err}
-	{/await}
-</div>
+					</a>
+					<span class={`tag ${resolveTag(route.grade)} is-light`}>
+						{route.grade}
+					</span>
+				</h3>
+				<p class="subtitle is-6">
+					Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
+				</p>
+			</div>
+		{/each}
+	</div>
+{:catch err}
+	{err}
+{/await}
 
 <style>
 	.route {

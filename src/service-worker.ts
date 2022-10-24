@@ -1,13 +1,14 @@
 const CACHE_NAME = 'uscwall-cache';
 
 const TWO_HOURS_IN_MILLISECONDS = 1000 * 60 * 60 * 2;
-const isValid = function (response) {
+
+function isValid(response) {
 	if (!response) return false;
 	let fetched = response.headers.get('sw-fetched-on');
 	if (fetched && parseFloat(fetched) + TWO_HOURS_IN_MILLISECONDS > new Date().getTime())
 		return true;
 	return false;
-};
+}
 
 self.addEventListener('fetch', (event) => {
 	// skip requests for extensions

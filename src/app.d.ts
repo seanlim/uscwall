@@ -3,6 +3,7 @@
 // and what to do when importing types
 declare namespace App {
 	type Route = {
+		id: string;
 		image_url: string;
 		grade: string;
 		route_type: string;
@@ -10,7 +11,7 @@ declare namespace App {
 		setter_name: string;
 		setter_handle: string;
 		date_time: Date;
-		uuid: string;
+		setter_id: string;
 		ascents: number;
 	};
 	// interface Locals {}

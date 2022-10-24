@@ -17,8 +17,11 @@ async function createGoogleSheetsClient(): Promise<sheets_v4.Sheets> {
 	return sheets;
 }
 
+const imgur_regex = new RegExp('https://i.imgur.com/([^/]+).webp');
 function buildRoute(data: string[]): App.Route {
+	const idMatch = imgur_regex.exec(data[0]);
 	return {
+		id: idMatch ? idMatch[1] : 'null-id',
 		image_url: data[0],
 		grade: data[1],
 		route_type: data[2],
@@ -26,12 +29,13 @@ function buildRoute(data: string[]): App.Route {
 		setter_name: data[4],
 		setter_handle: data[5],
 		date_time: new Date(data[6]),
-		uuid: data[7],
+		setter_id: data[7],
 		ascents: parseInt(data[8])
 	};
 }
 
-export const GET: RequestHandler = async () => {
+export const GET: RequestHandler = async (params) => {
+	const IDQuery = params.url.searchParams.get('id');
 	const client = await createGoogleSheetsClient();
 	const res = await client.spreadsheets.values.get({
 		spreadsheetId: env.SPREADSHEET_ID,
@@ -46,5 +50,9 @@ export const GET: RequestHandler = async () => {
 	const types = routes
 		?.map((route) => route.route_type)
 		.filter((value, index, self) => self.indexOf(value) === index);
-	return json({ routes, grades, sectors: types });
+	return json({
+		routes: IDQuery != null && IDQuery != '' ? routes?.filter((r) => r.id === IDQuery) : routes,
+		grades,
+		sectors: types
+	});
 };
