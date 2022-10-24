@@ -98,6 +98,7 @@
 
 <style>
 	.route {
+		content-visibility: auto;
 		cursor: pointer;
 		padding: 1rem;
 		border-bottom: solid #f5f5f5 1px;
