@@ -1,6 +1,8 @@
-import { error, json, type RequestHandler } from '@sveltejs/kit';
+import { json, type RequestHandler } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { google, sheets_v4 } from 'googleapis';
+
+const GRADES: string[] = ['⬜️ (V0-V1)', '🟩 (V2-V3)', '🟦 (V3-V4)', '🟥 (≥V5)'];
 
 async function createGoogleSheetsClient(): Promise<sheets_v4.Sheets> {
 	const jwtClient = new google.auth.JWT(
@@ -35,7 +37,9 @@ export const GET: RequestHandler = async () => {
 		spreadsheetId: env.SPREADSHEET_ID,
 		range: 'vetted worksheet!A2:I'
 	});
-	const routes = res.data.values?.map(buildRoute);
+	const routes = res.data.values
+		?.map(buildRoute)
+		.sort((a, b) => GRADES.indexOf(a.grade) - GRADES.indexOf(b.grade));
 	const grades = routes
 		?.map((route) => route.grade)
 		.filter((value, index, self) => self.indexOf(value) === index);

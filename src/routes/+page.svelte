@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { get, writable } from 'svelte/store';
+	import { writable } from 'svelte/store';
 	import Nav from '../components/Nav.svelte';
 
 	let routes = writable<App.Route[]>([]);
