@@ -1,4 +1,4 @@
-<nav class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar p-2 px-3" aria-label="main navigation">
 	<div class="navbar-brand">
 		<a href="/">
 			<div class="navbar-item logo-button">

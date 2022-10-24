@@ -50,9 +50,14 @@
 {#await fetchRoutes()}
 	loading...
 {:then data}
-	<div class="level">
-		<input class="input is-rounded" type="text" placeholder="Search..." bind:value={searchQuery} />
-		<div class="select is-rounded">
+	<div class="level mb-0 p-2">
+		<input
+			class="input is-rounded mr-2 mb-2"
+			type="text"
+			placeholder="Search route or setter name..."
+			bind:value={searchQuery}
+		/>
+		<div class="select is-rounded mr-2 mb-2">
 			<select bind:value={gradeFilter}>
 				<option value="*" selected>All grades</option>
 				{#each data.grades as grade}
@@ -60,7 +65,7 @@
 				{/each}
 			</select>
 		</div>
-		<div class="select is-rounded">
+		<div class="select is-rounded mr-2 mb-2">
 			<select bind:value={sectorFilter}>
 				<option value="*" selected>All Sectors</option>
 				{#each data.sectors as sector}
@@ -70,8 +75,11 @@
 		</div>
 		<button class="button" on:click={reset}>Reset</button>
 	</div>
-	<hr />
-	<div class="box">
+	<hr class="mt-1 mb-5" />
+	<div class="box is-flex is-flex-direction-column routes">
+		<span class="is-size-7 has-text-grey-light">
+			Showing {filteredRoutes.length} routes
+		</span>
 		{#each filteredRoutes as route}
 			<div
 				class="route"
@@ -109,5 +117,9 @@
 	}
 	.route:active {
 		outline: auto;
+	}
+	.routes {
+		overflow-y: scroll;
+		padding-bottom: 100px;
 	}
 </style>
