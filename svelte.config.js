@@ -9,10 +9,6 @@ const config = {
 
 	kit: {
 		adapter: adapter(),
-		paths: {
-			assets: process.env.PUBLIC_HOSTNAME,
-			base: process.env.PUBLIC_HOSTNAME
-		}
 	}
 };
 
