@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { PUBLIC_HOSTNAME } from '$env/static/public';
 	import { resolveTag } from '../../../helpers';
 
 	async function fetchRoutes() {
-		const res = await fetch(`/api/routes?id=${$page.params.slug}`);
+		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes?id=${$page.params.slug}`);
 		const data = await res.json();
 		if (res.ok) {
 			return data.routes;

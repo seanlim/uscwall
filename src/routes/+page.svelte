@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_HOSTNAME } from '$env/static/public';
 	import { goto, prefetch } from '$app/navigation';
 	import { resolveTag } from '../helpers';
 	import { writable } from 'svelte/store';
@@ -36,7 +37,7 @@
 	}
 
 	async function fetchRoutes() {
-		const res = await fetch('/api/routes');
+		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
 		const data = await res.json();
 		if (res.ok) {
 			routes.set(data.routes);
