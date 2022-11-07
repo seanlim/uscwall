@@ -15,7 +15,7 @@ self.addEventListener('fetch', (event) => {
 	// skip requests for extensions
 	if (!(event.request.url.indexOf('http') === 0)) return;
 
-	if (event.request.url.includes('/api/routes')) {
+	if (event.request.url.includes('routes')) {
 		event.respondWith(
 			caches.match(event.request).then((response) => {
 				if (isValid(response)) {
