@@ -8,7 +8,11 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		paths: {
+			assets: process.env.PUBLIC_HOSTNAME,
+			base: process.env.PUBLIC_HOSTNAME
+		}
 	}
 };
 
