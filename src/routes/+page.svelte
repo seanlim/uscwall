@@ -3,6 +3,7 @@
 	import { goto, prefetch } from '$app/navigation';
 	import { resolveTag } from '../helpers';
 	import { writable } from 'svelte/store';
+	import { base } from '$app/paths';
 
 	let routes = writable<App.Route[]>([]);
 
@@ -84,8 +85,8 @@
 		{#each filteredRoutes as route}
 			<div
 				class="route"
-				on:mouseenter={() => prefetch(`/v/${route.id}`)}
-				on:mouseup={() => goto(`/v/${route.id}`)}
+				on:mouseenter={() => prefetch(`${base}/v/${route.id}`)}
+				on:mouseup={() => goto(`${base}/v/${route.id}`)}
 			>
 				<h3 class="title is-5">
 					<a href={`/v/${route.id}`}>
