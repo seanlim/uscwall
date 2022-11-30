@@ -4,12 +4,13 @@
 	import { resolveTag } from '../helpers';
 	import { writable } from 'svelte/store';
 	import { base } from '$app/paths';
+	import { filters } from '../stores/filters';
 
 	let routes = writable<App.Route[]>([]);
 
-	let searchQuery: string = '';
-	let gradeFilter: string = '*';
-	let sectorFilter: string = '*';
+	let searchQuery: string = $filters.query;
+	let gradeFilter: string = $filters.grade;
+	let sectorFilter: string = $filters.sector;
 
 	$: filteredRoutes = $routes.filter((route) => {
 		let r = false;
@@ -32,9 +33,8 @@
 	});
 
 	function reset() {
-		searchQuery = '';
-		gradeFilter = '*';
-		sectorFilter = '*';
+		filters.reset();
+		location.reload();
 	}
 
 	async function fetchRoutes() {
@@ -58,9 +58,15 @@
 			type="text"
 			placeholder="Search route or setter name..."
 			bind:value={searchQuery}
+			on:change={() => filters.update('query', searchQuery)}
 		/>
 		<div class="select is-rounded mr-2 mb-2">
-			<select bind:value={gradeFilter}>
+			<select
+				bind:value={gradeFilter}
+				on:change={() => {
+					filters.update('grade', gradeFilter);
+				}}
+			>
 				<option value="*" selected>All grades</option>
 				{#each data.grades as grade}
 					<option value={grade}>{grade}</option>
@@ -68,7 +74,12 @@
 			</select>
 		</div>
 		<div class="select is-rounded mr-2 mb-2">
-			<select bind:value={sectorFilter}>
+			<select
+				bind:value={sectorFilter}
+				on:change={() => {
+					filters.update('sector', sectorFilter);
+				}}
+			>
 				<option value="*" selected>All Sectors</option>
 				{#each data.sectors as sector}
 					<option value={sector}>{sector}</option>
@@ -89,7 +100,7 @@
 				on:mouseup={() => goto(`${base}/v/${route.id}`)}
 			>
 				<h3 class="title is-5">
-					<a href={`/v/${route.id}`}>
+					<a href={`${base}/v/${route.id}`}>
 						{route.route_name}
 					</a>
 					<span class={`tag ${resolveTag(route.grade)} is-light`}>
