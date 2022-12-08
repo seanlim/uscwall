@@ -13,6 +13,7 @@
 		overflow: hidden;
 		height: 100vh;
 		background: #f5f5f5;
+		padding-bottom: env(safe-area-inset-bottom);
 	}
 	.container {
 		flex: 1;
