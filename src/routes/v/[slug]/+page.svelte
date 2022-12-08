@@ -19,11 +19,11 @@
 {:then routes}
 	{#each routes as route}
 		<div class="is-flex is-flex-direction-column is-flex-grow-1">
-			<div class="image-container is-flex-shrink-1">
-				<img alt="route" class="route-image" src={route.image_url} />
+			<div class="image-wrapper is-flex-grow-1">
+				<img class="image" src={route.image_url} alt="image" />
 			</div>
-			<div class="info-container p-2 is-flex-grow-1">
-				<h1 class="title">
+			<div class="info-container">
+				<h1 class="title is-5">
 					{route.route_name}
 					<span class={`tag is-medium is-light ${resolveTag(route.grade)}`}>{route.grade}</span>
 				</h1>
@@ -42,15 +42,24 @@
 {/await}
 
 <style>
-	.image-container {
-		min-height: 60vh;
-		max-height: 60vh;
+	.image-wrapper {
+		flex: 1;
 		overflow: scroll;
 	}
-	.route-image {
-		background: #f5f5f5;
+	.image {
+		margin-bottom: 200px;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
 	}
 	.info-container {
+		position: absolute;
+		bottom: 10px;
+		left: 10px;
+		right: 10px;
 		background: white;
+		border-radius: 10px;
+		padding: 0.8rem;
+		border: solid #f5f5f5 3px;
 	}
 </style>
