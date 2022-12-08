@@ -52,9 +52,9 @@
 {#await fetchRoutes()}
 	loading...
 {:then data}
-	<div class="level mb-0 p-2">
+	<div class="level mb-0 p-2 is-flex is-flex-direction-row is-flex-wrap-wrap">
 		<input
-			class="input is-rounded mr-2 mb-2"
+			class="input is-rounded mr-2 mb-2 is-flex-grow-1"
 			type="text"
 			placeholder="Search route or setter name..."
 			bind:value={searchQuery}

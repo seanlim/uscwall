@@ -18,11 +18,11 @@
 	Loading...
 {:then routes}
 	{#each routes as route}
-		<div class="is-flex is-flex-direction-row is-flex-wrap-wrap-reverse  is-justify-content-center">
-			<div class="image-container is-flex is-align-items-center is-justify-content-center">
+		<div class="is-flex is-flex-direction-column is-flex-grow-1">
+			<div class="image-container is-flex-shrink-1">
 				<img alt="route" class="route-image" src={route.image_url} />
 			</div>
-			<div class="info-container block is-flex-shrink-1">
+			<div class="info-container p-2 is-flex-grow-1">
 				<h1 class="title">
 					{route.route_name}
 					<span class={`tag is-medium is-light ${resolveTag(route.grade)}`}>{route.grade}</span>
@@ -43,25 +43,14 @@
 
 <style>
 	.image-container {
-		flex: 1;
-		min-width: 400px;
-		max-width: 400px;
+		min-height: 60vh;
+		max-height: 60vh;
+		overflow: scroll;
 	}
 	.route-image {
-		flex: 1;
 		background: #f5f5f5;
-		border-radius: 15px;
-		overflow: none;
 	}
-
 	.info-container {
-		margin-bottom: 1rem;
-	}
-
-	@media only screen and (min-width: 800px) {
-		/* Styles here */
-		.info-container {
-			margin-left: 1rem;
-		}
+		background: white;
 	}
 </style>
