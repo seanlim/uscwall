@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { PUBLIC_HOSTNAME } from '$env/static/public';
+
+	import Loading from '../../../components/Loading.svelte';
 	import { resolveTag } from '../../../helpers';
 
 	async function fetchRoutes() {
@@ -15,12 +17,12 @@
 </script>
 
 {#await fetchRoutes()}
-	Loading...
+	<Loading />
 {:then routes}
 	{#each routes as route}
 		<div class="is-flex is-flex-direction-column is-flex-grow-1">
 			<div class="image-wrapper is-flex-grow-1">
-				<img class="image" src={route.image_url} alt="image" />
+				<img class="image" src={route.image_url} alt="route image" />
 			</div>
 			<div class="info-container">
 				<h1 class="title is-5">

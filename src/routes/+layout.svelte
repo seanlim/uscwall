@@ -19,7 +19,8 @@
 		flex: 1;
 		margin: auto;
 		max-width: 500px !important;
-		height: 100vh;
+		height: 100%;
+		max-height: 70rem;
 		border-radius: 10px;
 		overflow: hidden;
 		background-color: white;

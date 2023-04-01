@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { writable } from 'svelte/store';
 	import { PUBLIC_HOSTNAME } from '$env/static/public';
 	import { goto, prefetch } from '$app/navigation';
-	import { resolveTag } from '../helpers';
-	import { writable } from 'svelte/store';
 	import { base } from '$app/paths';
+
+	import { resolveTag } from '../helpers';
 	import { filters } from '../stores/filters';
+	import Loading from '../components/Loading.svelte';
 
 	let routes = writable<App.Route[]>([]);
 
@@ -50,7 +52,7 @@
 </script>
 
 {#await fetchRoutes()}
-	loading...
+	<Loading />
 {:then data}
 	<div class="level mb-0 p-2 is-flex is-flex-direction-row is-flex-wrap-wrap">
 		<input
@@ -88,11 +90,11 @@
 		</div>
 		<button class="button" on:click={reset}>Reset</button>
 	</div>
-	<hr class="mt-1 mb-5" />
-	<div class="box is-flex is-flex-direction-column routes">
-		<span class="is-size-7 has-text-grey-light">
+	<hr class="m-3" />
+	<div class="is-flex is-flex-direction-column routes">
+		<div class="is-size-7 has-text-grey-light px-4">
 			Showing {filteredRoutes.length} routes
-		</span>
+		</div>
 		{#each filteredRoutes as route}
 			<div
 				class="route"
