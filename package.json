@@ -15,6 +15,7 @@
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-netlify": "^1.0.0-next.81",
 		"@sveltejs/kit": "next",
+		"@types/lodash": "^4.14.192",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
 		"eslint": "^8.16.0",
@@ -31,6 +32,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"googleapis": "^108.0.0"
+		"googleapis": "^108.0.0",
+		"lodash": "^4.17.21"
 	}
 }

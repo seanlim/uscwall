@@ -101,17 +101,17 @@
 				on:mouseenter={() => prefetch(`${base}/v/${route.id}`)}
 				on:mouseup={() => goto(`${base}/v/${route.id}`)}
 			>
-				<h3 class="title is-5">
-					<a href={`${base}/v/${route.id}`}>
-						{route.route_name}
-					</a>
+				<div class="title-row">
+					<h3 class="title is-5">
+						<a href={`${base}/v/${route.id}`}>
+							{route.route_name}
+						</a>
+					</h3>
 					<span class={`tag ${resolveTag(route.grade)} is-light`}>
 						{route.grade}
 					</span>
-				</h3>
-				<p class="subtitle is-6">
-					Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
-				</p>
+				</div>
+				Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
 			</div>
 		{/each}
 	</div>
@@ -123,8 +123,18 @@
 	.route {
 		content-visibility: auto;
 		cursor: pointer;
-		padding: 1rem;
-		border-bottom: solid #f5f5f5 1px;
+		padding: 0.5rem 1rem;
+		border-bottom: var(--light-gray) 1px solid;
+	}
+
+	.route .title-row {
+		display: flex;
+		flex-direction: row;
+		height: 2rem;
+		align-items: center;
+	}
+	.route .title {
+		flex: 1;
 	}
 
 	.route:hover {
@@ -134,7 +144,6 @@
 		outline: auto;
 	}
 	.routes {
-		overflow-y: scroll;
 		padding-bottom: 100px;
 	}
 </style>
