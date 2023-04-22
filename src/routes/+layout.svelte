@@ -44,6 +44,17 @@
 		background-color: var(--light-gray);
 		color: var(--secondary);
 	}
+
+	a {
+		color: var(--selection);
+		text-decoration: underline;
+		border-radius: 5px;
+	}
+
+	a:active {
+		background: var(--light-gray);
+	}
+
 	.container {
 		flex: 1;
 		margin: auto;
@@ -60,5 +71,16 @@
 		border-radius: 5px;
 		padding: 0.5rem;
 		font-weight: bold;
+	}
+
+	.tag.is-easy {
+		color: #3ec300;
+	}
+	.tag.is-medium {
+		color: #337ca0;
+	}
+
+	.tag.is-hard {
+		color: #ff1d15;
 	}
 </style>

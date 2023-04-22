@@ -24,7 +24,7 @@
 			<img class="image" src={route.image_url} alt={route.route_name} />
 			<h1>
 				{route.route_name}
-				<span class={`tag is-medium is-light ${resolveTag(route.grade)}`}>{route.grade}</span>
+				<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
 			</h1>
 			<p>
 				Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents

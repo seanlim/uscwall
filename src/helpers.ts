@@ -1,13 +1,12 @@
 // Resolves grade to Bulma color
 export function resolveTag(grade: string) {
-	if (grade.includes('V2')) {
-		return 'is-primary';
+	if (grade.includes('V2-V3')) {
+		return 'is-easy';
 	}
-	if (grade.includes('V3')) {
-		return 'is-info';
-	}
-	if (grade.includes('V5')) {
-		return 'is-danger';
+	if (grade.includes('V4-V5')) {
+		return 'is-medium';
+	} else if (grade.includes('V5')) {
+		return 'is-hard';
 	}
 	// defaults to V0
 }

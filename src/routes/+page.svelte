@@ -54,15 +54,15 @@
 {#await fetchRoutes()}
 	<Loading />
 {:then data}
-	<div class="level mb-0 p-2 is-flex is-flex-direction-row is-flex-wrap-wrap">
+	<div class="level">
 		<input
-			class="input is-rounded mr-2 mb-2 is-flex-grow-1"
+			class="input"
 			type="text"
 			placeholder="Search route or setter name..."
 			bind:value={searchQuery}
 			on:change={() => filters.update('query', searchQuery)}
 		/>
-		<div class="select is-rounded mr-2 mb-2">
+		<div class="select">
 			<select
 				bind:value={gradeFilter}
 				on:change={() => {
@@ -75,7 +75,7 @@
 				{/each}
 			</select>
 		</div>
-		<div class="select is-rounded mr-2 mb-2">
+		<div class="select">
 			<select
 				bind:value={sectorFilter}
 				on:change={() => {
@@ -90,11 +90,9 @@
 		</div>
 		<button class="button" on:click={reset}>Reset</button>
 	</div>
-	<hr class="m-3" />
-	<div class="is-flex is-flex-direction-column routes">
-		<div class="is-size-7 has-text-grey-light px-4">
-			Showing {filteredRoutes.length} routes
-		</div>
+	<hr />
+	<div class="routes">
+		Showing {filteredRoutes.length} routes
 		{#each filteredRoutes as route}
 			<div
 				class="route"
@@ -102,12 +100,12 @@
 				on:mouseup={() => goto(`${base}/v/${route.id}`)}
 			>
 				<div class="title-row">
-					<h3 class="title is-5">
+					<h3 class="title">
 						<a href={`${base}/v/${route.id}`}>
 							{route.route_name}
 						</a>
 					</h3>
-					<span class={`tag ${resolveTag(route.grade)} is-light`}>
+					<span class={`tag ${resolveTag(route.grade)}`}>
 						{route.grade}
 					</span>
 				</div>
@@ -123,7 +121,7 @@
 	.route {
 		content-visibility: auto;
 		cursor: pointer;
-		padding: 0.5rem 1rem;
+		padding: 0.3rem 0.5rem;
 		border-bottom: var(--light-gray) 1px solid;
 	}
 
@@ -144,6 +142,6 @@
 		outline: auto;
 	}
 	.routes {
-		padding-bottom: 100px;
+		padding: 0 0.5rem;
 	}
 </style>
