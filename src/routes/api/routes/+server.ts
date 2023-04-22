@@ -1,7 +1,6 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { google, sheets_v4 } from 'googleapis';
-import { uniq } from 'lodash';
 
 const GRADES: string[] = ['⬜️ (V0-V1)', '🟩 (V2-V3)', '🟦 (V4-V5)', '🟥 (≥V5)'];
 
@@ -49,7 +48,10 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 	const routes = res.data.values
 		?.map(buildRoute)
 		.sort((a, b) => GRADES.indexOf(a.grade) - GRADES.indexOf(b.grade));
-	const types = uniq(routes?.map((route) => route.route_type));
+	const types = routes
+		?.map((r) => r.route_type)
+		// unique
+		.filter((value, index, arr) => arr.indexOf(value) === index);
 	return json({
 		routes: IDQuery != null && IDQuery != '' ? routes?.filter((r) => r.id === IDQuery) : routes,
 		grades: GRADES,
