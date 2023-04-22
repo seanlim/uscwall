@@ -46,6 +46,13 @@
 		color: var(--secondary);
 	}
 
+	@media screen and (-webkit-min-device-pixel-ratio: 0) {
+		/* CSS Statements that only apply on webkit-based browsers (Chrome, Safari, etc.) */
+		body {
+			height: 100dvh;
+		}
+	}
+
 	a {
 		color: var(--selection);
 		text-decoration: underline;
