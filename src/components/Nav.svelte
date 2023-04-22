@@ -20,7 +20,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0.5rem;
-		background-color: white;
+		background-color: var(--primary);
 		z-index: 999;
 
 		position: sticky;

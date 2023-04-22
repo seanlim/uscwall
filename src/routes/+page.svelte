@@ -146,7 +146,7 @@
 	}
 
 	.route:hover {
-		background: #f5f5f5;
+		background: var(--light-gray);
 	}
 	.route:active {
 		outline: auto;
