@@ -100,16 +100,18 @@
 				on:mouseup={() => goto(`${base}/v/${route.id}`)}
 			>
 				<div class="title-row">
-					<h3 class="title">
+					<span class="title">
 						<a href={`${base}/v/${route.id}`}>
 							{route.route_name}
 						</a>
-					</h3>
+					</span>
 					<span class={`tag ${resolveTag(route.grade)}`}>
 						{route.grade}
 					</span>
 				</div>
-				Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
+				<span class="description">
+					Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
+				</span>
 			</div>
 		{/each}
 	</div>
@@ -128,11 +130,19 @@
 	.route .title-row {
 		display: flex;
 		flex-direction: row;
-		height: 2rem;
 		align-items: center;
 	}
 	.route .title {
+		font-weight: bold;
+		font-size: 1.1rem;
+		line-height: 110%;
 		flex: 1;
+		inline-size: 150px;
+		overflow-wrap: break-word;
+		margin-right: 10px;
+	}
+	.route .description {
+		font-size: 0.95rem;
 	}
 
 	.route:hover {
@@ -143,5 +153,6 @@
 	}
 	.routes {
 		padding: 0 0.5rem;
+		margin-bottom: 1rem;
 	}
 </style>

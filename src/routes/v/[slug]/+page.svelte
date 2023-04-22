@@ -20,12 +20,12 @@
 	<Loading />
 {:then routes}
 	{#each routes as route}
-		<div class="container">
+		<div class="route">
 			<img class="image" src={route.image_url} alt={route.route_name} />
-			<h1>
+			<span class="title">
 				{route.route_name}
 				<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
-			</h1>
+			</span>
 			<p>
 				Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
 			</p>
@@ -46,7 +46,16 @@
 		object-fit: contain;
 		margin-bottom: 1rem;
 	}
-	.container {
+	.route {
 		padding: 0 1rem;
+		height: 100%;
+		overflow: none;
+	}
+	.title {
+		inline-size: 80vw;
+		font-size: 1.3rem;
+		line-height: 2.2rem;
+		font-weight: bold;
+		overflow-wrap: break-word;
 	}
 </style>
