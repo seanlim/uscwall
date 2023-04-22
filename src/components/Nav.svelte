@@ -10,7 +10,7 @@
 			<h3>NUS USC Wall</h3>
 		</div>
 	</a>
-	<a href="/about">About</a>
+	<a href={`${base}/about`}>About</a>
 </nav>
 
 <style>
