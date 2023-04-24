@@ -1,20 +1,18 @@
 <script lang="ts">
-	import { writable } from 'svelte/store';
 	import { PUBLIC_HOSTNAME } from '$env/static/public';
 	import { goto, prefetch } from '$app/navigation';
 	import { base } from '$app/paths';
 
 	import { resolveTag } from '../helpers';
 	import { filters } from '../stores/filters';
-	import Loading from '../components/Loading.svelte';
-
-	let routes = writable<App.Route[]>([]);
+	import { routes } from '../stores/routes';
+	import { onMount } from 'svelte';
 
 	let searchQuery: string = $filters.query;
 	let gradeFilter: string = $filters.grade;
 	let sectorFilter: string = $filters.sector;
 
-	$: filteredRoutes = $routes.filter((route) => {
+	$: filteredRoutes = $routes.routes.filter((route) => {
 		let r = false;
 		if (
 			route.route_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -43,81 +41,77 @@
 		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
 		const data = await res.json();
 		if (res.ok) {
-			routes.set(data.routes);
+			routes.update(data);
 			return data;
 		} else {
 			throw new Error(data);
 		}
 	}
+
+	onMount(() => fetchRoutes());
 </script>
 
-{#await fetchRoutes()}
-	<Loading />
-{:then data}
-	<div class="level">
-		<input
-			class="input"
-			type="text"
-			placeholder="Search route or setter name..."
-			bind:value={searchQuery}
-			on:change={() => filters.update('query', searchQuery)}
-		/>
-		<div class="select">
-			<select
-				bind:value={gradeFilter}
-				on:change={() => {
-					filters.update('grade', gradeFilter);
-				}}
-			>
-				<option value="*" selected>All grades</option>
-				{#each data.grades as grade}
-					<option value={grade}>{grade}</option>
-				{/each}
-			</select>
-		</div>
-		<div class="select">
-			<select
-				bind:value={sectorFilter}
-				on:change={() => {
-					filters.update('sector', sectorFilter);
-				}}
-			>
-				<option value="*" selected>All Sectors</option>
-				{#each data.sectors as sector}
-					<option value={sector}>{sector}</option>
-				{/each}
-			</select>
-		</div>
-		<button class="button" on:click={reset}>Reset</button>
+<div class="level">
+	<input
+		class="input"
+		type="text"
+		placeholder="Search route or setter name..."
+		bind:value={searchQuery}
+		on:change={() => filters.update('query', searchQuery)}
+	/>
+	<div class="select">
+		<select
+			bind:value={gradeFilter}
+			on:change={() => {
+				filters.update('grade', gradeFilter);
+			}}
+		>
+			<option value="*" selected>All grades</option>
+			{#each $routes.grades as grade}
+				<option value={grade}>{grade}</option>
+			{/each}
+		</select>
 	</div>
-	<hr />
-	<div class="routes">
-		Showing {filteredRoutes.length} routes
-		{#each filteredRoutes as route}
-			<div
-				class="route"
-				on:mouseenter={() => prefetch(`${base}/v/${route.id}`)}
-				on:mouseup={() => goto(`${base}/v/${route.id}`)}
-			>
-				<div class="title-row">
-					<span class="title">
-						<a href={`${base}/v/${route.id}`}>
-							{route.route_name}
-						</a>
-					</span>
-					<span class={`tag ${resolveTag(route.grade)}`}>
-						{route.grade}
-					</span>
-				</div>
-				<span class="description">
-					Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
+	<div class="select">
+		<select
+			bind:value={sectorFilter}
+			on:change={() => {
+				filters.update('sector', sectorFilter);
+			}}
+		>
+			<option value="*" selected>All Sectors</option>
+			{#each $routes.sectors as sector}
+				<option value={sector}>{sector}</option>
+			{/each}
+		</select>
+	</div>
+	<button class="button" on:click={reset}>Reset</button>
+</div>
+<hr />
+<div class="routes">
+	Showing {filteredRoutes.length} routes
+	{#each filteredRoutes as route}
+		<div
+			class="route"
+			on:mouseenter={() => prefetch(`${base}/v/${route.id}`)}
+			on:mouseup={() => goto(`${base}/v/${route.id}`)}
+		>
+			<div class="title-row">
+				<span class="title">
+					<a href={`${base}/v/${route.id}`}>
+						{route.route_name}
+					</a>
+				</span>
+				<span class={`tag ${resolveTag(route.grade)}`}>
+					{route.grade}
 				</span>
 			</div>
-		{/each}
-	</div>
-{:catch err}
-	{err}
-{/await}
+			<span class="description">
+				Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
+			</span>
+		</div>
+	{/each}
+</div>
 
 <style>
 	.route {

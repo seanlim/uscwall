@@ -1,44 +1,42 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { PUBLIC_HOSTNAME } from '$env/static/public';
+	import { onMount } from 'svelte';
 
-	import Loading from '../../../components/Loading.svelte';
 	import { resolveTag } from '../../../helpers';
+	import { routes } from '../../../stores/routes';
 
 	async function fetchRoutes() {
-		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes?id=${$page.params.slug}`);
+		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
 		const data = await res.json();
 		if (res.ok) {
-			return data.routes;
+			return routes.update(data);
 		} else {
 			throw new Error(data);
 		}
 	}
+
+	onMount(() => fetchRoutes());
+
+	const route = $routes.routes.find((r) => r.id == $page.params.slug);
 </script>
 
-{#await fetchRoutes()}
-	<Loading />
-{:then routes}
-	{#each routes as route}
-		<div class="route">
-			<img class="image" src={route.image_url} alt={route.route_name} />
-			<span class="title">
-				{route.route_name}
-				<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
-			</span>
-			<p>
-				Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
-			</p>
-			<button on:click={() => window.open(route.image_url, '_blank')}
-				>View/Download Full Image</button
-			>
-		</div>
-	{:else}
-		No route found.
-	{/each}
-{:catch error}
-	{error}
-{/await}
+{#if route != null}
+	<div class="route">
+		<img class="image" src={route.image_url} alt={route.route_name} />
+		<span class="title">
+			{route.route_name}
+			<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
+		</span>
+		<p>
+			Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
+		</p>
+		<button on:click={() => window.open(route.image_url, '_blank')}>View/Download Full Image</button
+		>
+	</div>
+{:else}
+	Not found
+{/if}
 
 <style>
 	.image {

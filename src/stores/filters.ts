@@ -30,8 +30,8 @@ function createFiltersStore() {
 			if (browser) {
 				localStorage.setItem(FILTERS_LOCALSTORAGE_KEY, JSON.stringify(value));
 			}
-			debug(`setting ${JSON.stringify(value, null, 2)}`);
-			set(filters);
+			debug(`setting filters ${JSON.stringify(value, null, 2)}`);
+			set(value);
 		},
 		update: (key: keyof Filters, value: string) =>
 			update((x) => {
