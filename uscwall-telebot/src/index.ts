@@ -1,10 +1,19 @@
-import { Telegraf } from "telegraf";
+import { Markup, Scenes, Telegraf, session } from "telegraf";
 import * as Dotenv from "dotenv";
 import { InlineQueryResult } from "telegraf/typings/core/types/typegram";
-import { WELCOME_MESSAGE } from "./constants";
+import { SUBMIT_MESSAGE, WELCOME_MESSAGE } from "./constants";
+import submitRouteScene from "./scenes/submitRoute";
 Dotenv.config();
 
-const bot = new Telegraf(process.env.TELEGRAM_TOKEN ?? "");
+const { enter, leave } = Scenes.Stage;
+
+const stage = new Scenes.Stage<Scenes.SceneContext>([submitRouteScene], {
+  ttl: 10,
+});
+
+const bot = new Telegraf<Scenes.SceneContext>(process.env.TELEGRAM_TOKEN ?? "");
+bot.use(session());
+bot.use(stage.middleware());
 
 bot.command("quit", async (ctx) => {
   // Explicit usage
@@ -14,19 +23,13 @@ bot.command("quit", async (ctx) => {
   await ctx.leaveChat();
 });
 
-bot.start((ctx) => ctx.reply(WELCOME_MESSAGE));
+bot.start((ctx) =>
+  ctx.reply(WELCOME_MESSAGE, {
+    parse_mode: "MarkdownV2",
+  })
+);
 
-// bot.on("text", async (ctx) => {
-//   console.info(ctx);
-//   // Explicit usage
-//   await ctx.telegram.sendMessage(
-//     ctx.message.chat.id,
-//     `Hello ${ctx.state.role}`
-//   );
-
-//   // Using context shortcut
-//   await ctx.reply(WELCOME_MESSAGE);
-// });
+bot.command("submit", (ctx) => ctx.scene.enter("submit"));
 
 bot.on("callback_query", async (ctx) => {
   // Explicit usage
