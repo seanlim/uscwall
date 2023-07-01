@@ -1,6 +1,7 @@
 import { Telegraf } from "telegraf";
 import * as Dotenv from "dotenv";
 import { InlineQueryResult } from "telegraf/typings/core/types/typegram";
+import { WELCOME_MESSAGE } from "./constants";
 Dotenv.config();
 
 const bot = new Telegraf(process.env.TELEGRAM_TOKEN ?? "");
@@ -13,17 +14,19 @@ bot.command("quit", async (ctx) => {
   await ctx.leaveChat();
 });
 
-bot.on("text", async (ctx) => {
-  console.info(ctx);
-  // Explicit usage
-  await ctx.telegram.sendMessage(
-    ctx.message.chat.id,
-    `Hello ${ctx.state.role}`
-  );
+bot.start((ctx) => ctx.reply(WELCOME_MESSAGE));
 
-  // Using context shortcut
-  await ctx.reply(`Hello ${ctx.state.role}`);
-});
+// bot.on("text", async (ctx) => {
+//   console.info(ctx);
+//   // Explicit usage
+//   await ctx.telegram.sendMessage(
+//     ctx.message.chat.id,
+//     `Hello ${ctx.state.role}`
+//   );
+
+//   // Using context shortcut
+//   await ctx.reply(WELCOME_MESSAGE);
+// });
 
 bot.on("callback_query", async (ctx) => {
   // Explicit usage
