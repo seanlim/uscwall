@@ -1,26 +1,26 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/ee25f89c-b4da-4c34-b800-7cc5da59dc36/deploy-status)](https://app.netlify.com/sites/fascinating-blini-728c6c/deploys)
+# Website and Telegam Bot for the NUS USC Boulder Wall
 
-Powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This repo contains:
 
-## Developing
+- `uscwall-telebot`: web server that hosts telegram bot and main APIs
+- `uscwall-web`: mobile-friendly website for browsing routes
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+# Roadmap
 
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- Set up Telegram Bot and main API applications on server.
+- Migrate main Google Sheets client to the server-side.
+  - figure out how to cache Sheets API calls otherwise the server might be slow.
+- Build new Telegram Bot
+  - /submit-route : submit routes for vetting
+  - /view-routes : redirects to website
+- Deploy new Telegram Bot
+- Update website:
+  - Remove edge function and use API instead.
+  - Add telegram bot link and allow users to create routes.
+- Add support for logging ascents
+  - Add "Sign in with Telegram" capability to the server side.
+  - Add API endpoint for logging ascent (must be authenticated, unsure about the protocol here).
+  - Add "Sign in with Telegram" capability to website.
+  - Add button to log ascent.
+  - Add Ascentionist list to route viewer.
+- Add API endpoint to retrieve users logbook.

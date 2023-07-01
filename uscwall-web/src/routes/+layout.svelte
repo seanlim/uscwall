@@ -29,6 +29,7 @@
 			--light-gray: #242323;
 		}
 	}
+
 	body {
 		display: flex;
 		overflow: hidden;
