@@ -7,20 +7,18 @@ We've phased out viewing routes on Telegram\\. Visit [this website](https://apps
 `;
 
 export const SUBMIT_MESSAGE = `
-ROUTE SUBMISSION INSTRUCTIONS
+*Route Submission Instructions*
 
-The image of your route should:
- - be upright
- - be properly cropped
- - be of good quality
- - contain start and top holds that are clearly marked out
- - have footholds that are distinguished from handholds
+Submissions will be vetted based on the following guidelines:
+ \\- Be upright\\.
+ \\- Be properly cropped\\.
+ \\- Be of good quality\\.
+ \\- Contain start and top holds that are clearly marked out\\.
+ \\- Have footholds that are distinguished from handholds\\.
 
-Reference route: --------link-------- (https://i.imgur.com/pQDIPGu.webp?maxwidth=1500&shape=thumb&fidelity=high)
+Here is a [Reference route](https://i.imgur.com/pQDIPGu.webp?maxwidth=1500&shape=thumb&fidelity=high)\\.
 
-Submissions will be vetted based on the guidelines above.
+/cancel to cancel submission\\.
 
-For spinning tiles and wall damage, circle the affected areas clearly.
-
-To begin, attach an image of your route:
+To begin, please attach an image of your proposed route:
 `;
