@@ -1,17 +1,24 @@
-import { Markup, Scenes, Telegraf, session } from "telegraf";
+import { Context, Markup, Scenes, Telegraf, session } from "telegraf";
 import * as Dotenv from "dotenv";
 import { InlineQueryResult } from "telegraf/typings/core/types/typegram";
 import { SUBMIT_MESSAGE, WELCOME_MESSAGE } from "./constants";
-import submitRouteScene from "./scenes/submitRoute";
+import submitRouteScene, {
+  SubmitWizardSessionData,
+} from "./scenes/submitRoute";
 Dotenv.config();
 
-const { enter, leave } = Scenes.Stage;
+export interface USCBotContext extends Context {
+  // declare scene type
+  scene: Scenes.SceneContextScene<USCBotContext, SubmitWizardSessionData>;
+  // declare wizard type
+  wizard: Scenes.WizardContextWizard<USCBotContext>;
+}
 
-const stage = new Scenes.Stage<Scenes.SceneContext>([submitRouteScene], {
+const stage = new Scenes.Stage<USCBotContext>([submitRouteScene], {
   ttl: 10,
 });
 
-const bot = new Telegraf<Scenes.SceneContext>(process.env.TELEGRAM_TOKEN ?? "");
+const bot = new Telegraf<USCBotContext>(process.env.TELEGRAM_TOKEN ?? "");
 bot.use(session());
 bot.use(stage.middleware());
 
