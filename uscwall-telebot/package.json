@@ -6,9 +6,9 @@
   "author": "Sean Lim <seanlimdev856@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@hqoss/http-client": "^0.1.27-0",
-    "@types/node-fetch": "^2.6.4",
+    "axios": "^1.4.0",
     "dotenv": "^16.0.3",
+    "form-data": "^4.0.0",
     "telegraf": "^4.11.2"
   },
   "devDependencies": {
