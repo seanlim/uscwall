@@ -11,11 +11,19 @@ import axios from "axios";
 import FormData from "form-data";
 
 export const uploadHandler = new Composer<USCBotContext>();
+uploadHandler.on(message("text"), async (ctx) => {
+  await ctx.reply('Please send an image.'); 
+  return ctx.wizard.state;
+});
+uploadHandler.on(message("document"), async (ctx) => {
+  await ctx.reply('Please send an image.'); 
+  return ctx.wizard.state;
+});
 uploadHandler.on(message("photo"), async (ctx) => {
   const l = ctx.update.message.photo.length;
   if (l < 1) {
     console.error("no images");
-    return;
+    return ctx.scene.reenter();
   }
   ctx.scene.session.telegramFileID = ctx.update.message.photo[l - 1].file_id;
   await ctx.reply(
