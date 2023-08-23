@@ -7,7 +7,9 @@ import submitRouteScene, {
 } from "./scenes/submitRoute";
 Dotenv.config();
 
+
 export interface USCBotContext extends Context {
+  imgurToken: string;
   // declare scene type
   scene: Scenes.SceneContextScene<USCBotContext, SubmitWizardSessionData>;
   // declare wizard type
@@ -37,6 +39,9 @@ bot.start((ctx) =>
 );
 
 bot.command("submit", (ctx) => ctx.scene.enter("submit"));
+bot.catch((err, ctx) => {
+  console.error(err);
+});
 
 bot.on("callback_query", async (ctx) => {
   // Explicit usage
@@ -50,7 +55,6 @@ bot.on("inline_query", async (ctx) => {
   const result: readonly InlineQueryResult[] = [];
   // Explicit usage
   await ctx.telegram.answerInlineQuery(ctx.inlineQuery.id, result);
-
   // Using context shortcut
   await ctx.answerInlineQuery(result);
 });
