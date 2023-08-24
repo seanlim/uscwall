@@ -63,26 +63,22 @@ nameHandler.on(message("text"), async (ctx) => {
 export const sectorHandler = new Composer<USCBotContext>();
 sectorHandler.on(message("text"), async (ctx) => {
   console.info("Handling sector...");
-  try {
-    if (!Object.values(Sectors).includes(ctx.message.text)) {
-      await ctx.reply(
-        "Invalid input, please use inputs provided",
-        Markup.keyboard(SECTORS_BUTTONS).oneTime()
-      );
-      return ctx.wizard.state;
-    }
-    ctx.scene.session.routeSector = ctx.message.text;
+  if (!Object.values(Sectors).includes(ctx.message.text)) {
     await ctx.reply(
-      `"${ctx.scene.session.routeName}", graded ${ctx.scene.session.routeGrade} at ${ctx.scene.session.routeSector}.`,
-      Markup.inlineKeyboard([
-        Markup.button.callback("Cancel", "cancel"),
-        Markup.button.callback("Confirm", "confirm"),
-      ])
+      "Invalid input, please use inputs provided",
+      Markup.keyboard(SECTORS_BUTTONS).oneTime()
     );
-    return ctx.wizard.next();
-  } catch (err) {
-    console.error(err);
+    return ctx.wizard.state;
   }
+  ctx.scene.session.routeSector = ctx.message.text;
+  await ctx.reply(
+    `"${ctx.scene.session.routeName}", graded ${ctx.scene.session.routeGrade} at ${ctx.scene.session.routeSector}.`,
+    Markup.inlineKeyboard([
+      Markup.button.callback("Cancel", "cancel"),
+      Markup.button.callback("Confirm", "confirm"),
+    ])
+  );
+  return ctx.wizard.next();
 });
 
 async function getFilePath(fileID: string): Promise<string> {
