@@ -15,9 +15,7 @@ export interface USCBotContext extends Context {
   wizard: Scenes.WizardContextWizard<USCBotContext>;
 }
 
-const stage = new Scenes.Stage<USCBotContext>([submitRouteScene], {
-  ttl: 10,
-});
+const stage = new Scenes.Stage<USCBotContext>([submitRouteScene]);
 
 const bot = new Telegraf<USCBotContext>(process.env.TELEGRAM_TOKEN ?? "");
 bot.use(session());
@@ -38,27 +36,10 @@ bot.start((ctx) =>
 );
 
 bot.command("submit", (ctx) => ctx.scene.enter("submit"));
-bot.catch((err, ctx) => {
-  console.error(err);
+
+bot.launch({
+  allowedUpdates: ["message", "callback_query"],
 });
-
-bot.on("callback_query", async (ctx) => {
-  // Explicit usage
-  await ctx.telegram.answerCbQuery(ctx.callbackQuery.id);
-
-  // Using context shortcut
-  await ctx.answerCbQuery();
-});
-
-bot.on("inline_query", async (ctx) => {
-  const result: readonly InlineQueryResult[] = [];
-  // Explicit usage
-  await ctx.telegram.answerInlineQuery(ctx.inlineQuery.id, result);
-  // Using context shortcut
-  await ctx.answerInlineQuery(result);
-});
-
-bot.launch();
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));
