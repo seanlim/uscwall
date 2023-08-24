@@ -36,47 +36,44 @@ uploadHandler.on(message("photo"), async (ctx) => {
 
 export const gradeHandler = new Composer<USCBotContext>();
 gradeHandler.on(message("text"), async (ctx) => {
-  const inputText = ctx.message.text;
-  if (!Object.values(Grades).includes(inputText)) {
+  console.info("Handling grade...");
+  if (!Object.values(Grades).includes(ctx.message.text)) {
     await ctx.reply(
       "Invalid input, please use inputs provided",
       Markup.keyboard(GRADES_BUTTONS).oneTime()
     );
     return ctx.wizard.state;
   }
-  ctx.scene.session.routeGrade = inputText;
+  ctx.scene.session.routeGrade = ctx.message.text;
   await ctx.reply("What do you want to name this route?");
   return ctx.wizard.next();
 });
 
 export const nameHandler = new Composer<USCBotContext>();
 nameHandler.on(message("text"), async (ctx) => {
-  try {
-    ctx.scene.session.routeName = ctx.message.text;
-    await ctx.reply(
-      "Which sector is this route at?",
-      Markup.keyboard(SECTORS_BUTTONS).oneTime()
-    );
-    return ctx.wizard.next();
-  } catch (error) {
-    console.error(error);
-  }
+  console.info("Handling name...");
+  ctx.scene.session.routeName = ctx.message.text;
+  await ctx.reply(
+    "Which sector is this route at?",
+    Markup.keyboard(SECTORS_BUTTONS).oneTime()
+  );
+  return ctx.wizard.next();
 });
 
 export const sectorHandler = new Composer<USCBotContext>();
 sectorHandler.on(message("text"), async (ctx) => {
+  console.info("Handling sector...");
   try {
-    const inputText = ctx.message.text;
-    if (!Object.values(Sectors).includes(inputText)) {
+    if (!Object.values(Sectors).includes(ctx.message.text)) {
       await ctx.reply(
         "Invalid input, please use inputs provided",
         Markup.keyboard(SECTORS_BUTTONS).oneTime()
       );
       return ctx.wizard.state;
     }
-    ctx.scene.session.routeSector = inputText;
+    ctx.scene.session.routeSector = ctx.message.text;
     await ctx.reply(
-      `"${ctx.scene.session.routeName}", graded ${ctx.scene.session.routeGrade} at ${ctx.scene.session.routeSector} with fileID ${ctx.scene.session.telegramFileID}.`,
+      `"${ctx.scene.session.routeName}", graded ${ctx.scene.session.routeGrade} at ${ctx.scene.session.routeSector}.`,
       Markup.inlineKeyboard([
         Markup.button.callback("Cancel", "cancel"),
         Markup.button.callback("Confirm", "confirm"),
@@ -114,21 +111,15 @@ async function getImgurToken(): Promise<string> {
   return res.data.access_token;
 }
 
-async function uploadFileToImgur(imageURL: string, imgurToken: string) {
+async function uploadFileToImgur(
+  imageURL: string,
+  imgurToken: string
+): Promise<string> {
   const form = new FormData();
   console.info(imageURL);
   form.append("image", imageURL);
   form.append("description", "TEST");
-  const res = await axios.request<
-    {},
-    {
-      data: {
-        id: string;
-        title: string;
-      };
-      success: boolean;
-    }
-  >({
+  const res = await axios.request({
     method: "post",
     url: "https://api.imgur.com/3/image",
     headers: {
@@ -137,7 +128,8 @@ async function uploadFileToImgur(imageURL: string, imgurToken: string) {
     },
     data: form,
   });
-  return res;
+  console.log(res.data);
+  return res.data.data.link;
 }
 
 async function createGoogleSheetsClient(): Promise<sheets_v4.Sheets> {
@@ -160,80 +152,50 @@ submissionHandler.action("cancel", async (ctx) => {
   return ctx.scene.leave();
 });
 submissionHandler.action("confirm", async (ctx) => {
-  try {
-    console.debug(`Submitting with fileID ${ctx.scene.session.telegramFileID}`);
-    const fileID = ctx.scene.session.telegramFileID;
-    const { routeGrade, routeName, routeSector } = ctx.scene.session;
+  console.info("Handling submission...");
+  const {
+    routeGrade,
+    routeName,
+    routeSector,
+    telegramFileID: fileID,
+  } = ctx.scene.session;
+  console.debug(`Submitting with fileID ${fileID}`);
+  await ctx.reply("Uploading image...");
+  // Obtain image from URL
+  const path = await getFilePath(fileID);
+  const imgURL = `https://api.telegram.org/file/bot${process.env.TELEGRAM_TOKEN}/${path}`;
+  // Upload image to imgur
+  await ctx.reply("Finalising submission...");
+  const imgurToken = await getImgurToken();
+  const imgLink = await uploadFileToImgur(imgURL, imgurToken);
 
-    await ctx.reply("Uploading image...");
-    // Obtain image from URL
-    const path = await getFilePath(fileID);
-    const imgURL = `https://api.telegram.org/file/bot${process.env.TELEGRAM_TOKEN}/${path}`;
-    // Upload image to imgur
-    await ctx.reply("Finalising submission...");
-    const imgurToken = await getImgurToken();
-    const r = await uploadFileToImgur(imgURL, imgurToken);
-    const imageData = r.data;
-    console.info(`imageData: ${JSON.stringify(imageData)}`);
-
-    const client = await createGoogleSheetsClient();
-    // const response = await client.spreadsheets.get({
-    //   spreadsheetId: process.env.SPREADSHEET_ID,
-    // });
-    // const spreadSheet = response.data; // Entire DB
-    // const sheets = spreadSheet.sheets; // DB tables
-
-    // const request = {
-    //   spreadsheetId: process.env.SPREADSHEET_ID,
-    //   range: "submissions",
-    //   valueInputOption: "USER_ENTERED",
-    //   resource: {
-    //     values: [
-    //       [
-    //         // [...Object.values(data)]
-    //         "Image Link",
-    //         ctx.scene.session.routeGrade,
-    //         ctx.scene.session.routeSector,
-    //         ctx.scene.session.routeName,
-    //         ctx.from?.first_name,
-    //         ctx.from?.username,
-    //         new Date(),
-    //         ctx.from?.id,
-    //         0,
-    //         "pending",
-    //       ],
-    //     ],
-    //   },
-    // };
-    await client.spreadsheets.values.append({
-      spreadsheetId: process.env.SPREADSHEET_ID,
-      range: "submissions",
-      valueInputOption: "USER_ENTERED",
-      requestBody: {
-        values: [
-          [
-            // [...Object.values(data)]
-            "Image Link",
-            routeGrade,
-            routeName,
-            routeSector,
-            ctx.from?.first_name,
-            ctx.from?.username,
-            new Date(),
-            ctx.from?.id,
-            0,
-            "pending",
-          ],
+  const client = await createGoogleSheetsClient();
+  await client.spreadsheets.values.append({
+    spreadsheetId: process.env.SPREADSHEET_ID,
+    range: "submissions",
+    valueInputOption: "USER_ENTERED",
+    requestBody: {
+      values: [
+        [
+          imgLink,
+          routeGrade,
+          routeName,
+          routeSector,
+          ctx.from?.first_name,
+          ctx.from?.username,
+          new Date(),
+          ctx.from?.id,
+          0,
+          "pending",
         ],
-      },
-    });
-    console.log("Cells Appended");
+      ],
+    },
+  });
+  console.log("Cells Appended");
 
-    await ctx.reply(
-      "Done! Your route should appear once we are done vetting it!"
-    );
-    return ctx.scene.leave();
-  } catch (err) {
-    console.error(err);
-  }
+  await ctx.reply(
+    "Done! Your route should appear once we are done vetting it!"
+  );
+
+  return ctx.scene.leave();
 });

@@ -7,7 +7,6 @@ import submitRouteScene, {
 } from "./scenes/submitRoute";
 Dotenv.config();
 
-
 export interface USCBotContext extends Context {
   imgurToken: string;
   // declare scene type
