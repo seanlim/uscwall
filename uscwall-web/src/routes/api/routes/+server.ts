@@ -22,20 +22,18 @@ async function createGoogleSheetsClient(): Promise<sheets_v4.Sheets> {
 	return sheets;
 }
 
-const imgur_regex = new RegExp('https://i.imgur.com/([^/]+).webp');
 function buildRoute(data: string[]): App.Route {
-	const idMatch = imgur_regex.exec(data[0]);
 	return {
-		id: idMatch ? idMatch[1] : 'null-id',
-		image_url: data[0],
-		grade: data[1],
-		route_type: data[2],
-		route_name: data[3],
-		setter_name: data[4],
-		setter_handle: data[5],
-		date_time: new Date(data[6]),
-		setter_id: data[7],
-		ascents: parseInt(data[8])
+		id: data[0],
+		image_url: data[1],
+		grade: data[2],
+		route_type: data[3],
+		route_name: data[4],
+		setter_name: data[5],
+		setter_handle: data[6],
+		date_time: new Date(data[7]),
+		setter_id: data[8],
+		ascents: parseInt(data[9])
 	};
 }
 
