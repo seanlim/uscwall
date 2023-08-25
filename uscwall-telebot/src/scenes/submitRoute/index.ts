@@ -9,14 +9,6 @@ import {
 } from "./handlers";
 import { USCBotContext } from "../..";
 
-export interface SubmitWizardSessionData extends Scenes.WizardSessionData {
-  routeName: string;
-  routeGrade: string;
-  routeSector: string;
-  telegramFileID: string;
-}
-
-// Submit Route Scene
 const submitRouteScene = new Scenes.WizardScene<USCBotContext>(
   "submit",
   async (ctx) => {

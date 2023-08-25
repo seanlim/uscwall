@@ -2,20 +2,32 @@ import { Context, Markup, Scenes, Telegraf, session } from "telegraf";
 import * as Dotenv from "dotenv";
 import { InlineQueryResult } from "telegraf/typings/core/types/typegram";
 import { SUBMIT_MESSAGE, WELCOME_MESSAGE } from "./constants";
-import submitRouteScene, {
-  SubmitWizardSessionData,
-} from "./scenes/submitRoute";
+import submitRouteScene from "./scenes/submitRoute";
+import reportScene from "./scenes/report";
+
 Dotenv.config();
 
+export interface WizardSessionData extends Scenes.WizardSessionData {
+  // Route submission
+  routeName: string;
+  routeGrade: string;
+  routeSector: string;
+  // Reporting
+  reportDescription: string;
+  reportSector: string;
+  reportHasImage: boolean;
+  // For uploads
+  telegramFileID: string;
+}
 export interface USCBotContext extends Context {
   imgurToken: string;
   // declare scene type
-  scene: Scenes.SceneContextScene<USCBotContext, SubmitWizardSessionData>;
+  scene: Scenes.SceneContextScene<USCBotContext, WizardSessionData>;
   // declare wizard type
   wizard: Scenes.WizardContextWizard<USCBotContext>;
 }
 
-const stage = new Scenes.Stage<USCBotContext>([submitRouteScene]);
+const stage = new Scenes.Stage<USCBotContext>([submitRouteScene, reportScene]);
 
 const bot = new Telegraf<USCBotContext>(process.env.TELEGRAM_TOKEN ?? "");
 bot.use(session());
@@ -29,13 +41,14 @@ bot.command("quit", async (ctx) => {
   await ctx.leaveChat();
 });
 
-bot.start((ctx) =>
-  ctx.reply(WELCOME_MESSAGE, {
+bot.start(async (ctx) => {
+  await ctx.reply(WELCOME_MESSAGE, {
     parse_mode: "MarkdownV2",
-  })
-);
+  });
+});
 
 bot.command("submit", (ctx) => ctx.scene.enter("submit"));
+bot.command("report", (ctx) => ctx.scene.enter("report"));
 
 bot.launch({
   allowedUpdates: ["message", "callback_query"],

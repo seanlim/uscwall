@@ -1,9 +1,12 @@
 export const WELCOME_MESSAGE = `
-*Welcome to USCTelebot\\!*
+*Welcome to the USCTelebot\\!*
 
-We've phased out viewing routes on Telegram\\. Visit [this website](https://apps.sean.place/uscwall) to view routes and log ascents\\.
+To see climbing routes\\, please visit [apps\\.sean\\.place/uscwall](https://apps.sean.place/uscwall)\\.
 
-*Use /submit to submit a route\\!*
+*Commands\\:* 
+\\- /submit to submit a route\\.
+\\- /report to report issues with the boulder wall\\.
+\\- /feedback to submit feedback\\.
 `;
 
 export const SUBMIT_MESSAGE = `
@@ -18,28 +21,27 @@ Submissions will be vetted based on the following guidelines:
 
 Here is a [Reference route](https://i.imgur.com/pQDIPGu.webp?maxwidth=1500&shape=thumb&fidelity=high)\\.
 
-/cancel to cancel submission\\.
+To begin, please attach an image of your proposed route\\.
 
-To begin, please attach an image of your proposed route:
+You can use /cancel to cancel your submission at any point\\.
 `;
 
 export const Sectors = {
-  Vertical: "Sector 1 (Vertical)",
-  Overhang: "Sector 2 (23° Overhang)",
-  Slab: "Sector 3 (Slab)",
-  Board: "Board Sector",
+  Left: "Left Sector (Vertical Wall)",
+  Middle: "Middle Sector (Overhang Wall)",
+  Right: "Right Sector (Slab Wall)",
 };
 
 export const SECTORS_BUTTONS = [
-  [Sectors.Vertical, Sectors.Overhang],
-  [Sectors.Slab, Sectors.Board],
+  [Sectors.Left, Sectors.Middle],
+  [Sectors.Right],
 ];
 
 export const Grades = {
-  Easy: "⬜️ (V0-V1)",
-  Medium: "🟩 (V2-V3)",
-  Hard: "🟦 (V4-V5)",
-  Harder: "🟥 (≥V5)",
+  Easy: "⬜️ Beginner (V0-V1)",
+  Medium: "🟩 Easy (V2-V3)",
+  Hard: "🟦 Intermediate (V4-V5)",
+  Harder: "🟥 Hard (≥V5)",
 };
 
 export const GRADES_BUTTONS = [
