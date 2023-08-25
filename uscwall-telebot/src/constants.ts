@@ -1,7 +1,7 @@
 export const WELCOME_MESSAGE = `
 *Welcome to the USCTelebot\\!*
 
-To see climbing routes\\, please visit [apps\\.sean\\.place/uscwall](https://apps.sean.place/uscwall)\\.
+To see climbing routes\\, please visit [uscwall\\.sean\\.place](https://uscwall.sean.place)\\.
 
 *Commands\\:* 
 \\- /submit to submit a route\\.
