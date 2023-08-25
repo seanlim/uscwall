@@ -100,4 +100,33 @@
 	.tag.is-hard {
 		color: #ff1d15;
 	}
+	.skeleton {
+		width: 100%;
+		height: 100%;
+		background: white;
+		border-radius: 10px;
+		display: flex;
+		margin-bottom: 20px;
+	}
+
+	.skeleton-inner {
+		flex: 1;
+		min-height: 30px;
+		background: #f5f5f5;
+		border-radius: 5px;
+		animation: loading 1s infinite ease-in;
+		margin: 3px;
+	}
+
+	@keyframes loading {
+		0% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
 </style>

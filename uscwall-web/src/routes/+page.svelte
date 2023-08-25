@@ -7,10 +7,14 @@
 	import { filters } from '../stores/filters';
 	import { routes } from '../stores/routes';
 	import { onMount } from 'svelte';
+	import RoutesSkeleton from '../components/RoutesSkeleton.svelte';
 
 	let searchQuery: string = $filters.query;
 	let gradeFilter: string = $filters.grade;
 	let sectorFilter: string = $filters.sector;
+
+	let isLoading = false;
+	let isError = false;
 
 	$: filteredRoutes = $routes.routes.filter((route) => {
 		let r = false;
@@ -38,12 +42,16 @@
 	}
 
 	async function fetchRoutes() {
+		isLoading = true;
 		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
 		const data = await res.json();
+		isLoading = false;
 		if (res.ok) {
+			isError = false;
 			routes.update(data);
 			return data;
 		} else {
+			isError = true;
 			throw new Error(data);
 		}
 	}
@@ -89,7 +97,17 @@
 </div>
 <hr />
 <div class="routes">
-	Showing {filteredRoutes.length} routes
+	{#if filteredRoutes.length < 1}
+		{#if isLoading}
+			<RoutesSkeleton />
+		{:else if isError}
+			An error has occurred. Please refresh to try again.
+		{:else}
+			No routes to to display yet!
+		{/if}
+	{:else}
+		Showing {filteredRoutes.length} routes
+	{/if}
 	{#each filteredRoutes as route}
 		<div
 			class="route"
