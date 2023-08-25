@@ -3,8 +3,8 @@ import { debug } from '../helpers';
 import { writable } from 'svelte/store';
 
 export type Routes = {
-	routes: App.Route[];
-	sectors: string[];
+	routes?: App.Route[];
+	sectors?: string[];
 	grades: string[];
 };
 const ROUTES_LOCALSTORAGE_KEY = 'routes';

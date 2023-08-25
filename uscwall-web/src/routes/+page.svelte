@@ -16,25 +16,27 @@
 	let isLoading = false;
 	let isError = false;
 
-	$: filteredRoutes = $routes.routes.filter((route) => {
-		let r = false;
-		if (
-			route.route_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			route.setter_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			route.setter_handle.toLowerCase().includes(searchQuery.toLowerCase())
-		) {
-			r = true;
-		}
-		let g = gradeFilter == '*';
-		if (gradeFilter !== '*' && route.grade == gradeFilter) {
-			g = true;
-		}
-		let s = sectorFilter == '*';
-		if (sectorFilter !== '*' && route.route_type == sectorFilter) {
-			s = true;
-		}
-		return r && g && s;
-	});
+	$: filteredRoutes =
+		// TODO: manage this better
+		$routes.routes?.filter((route) => {
+			let r = false;
+			if (
+				route.route_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				route.setter_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				route.setter_handle.toLowerCase().includes(searchQuery.toLowerCase())
+			) {
+				r = true;
+			}
+			let g = gradeFilter == '*';
+			if (gradeFilter !== '*' && route.grade == gradeFilter) {
+				g = true;
+			}
+			let s = sectorFilter == '*';
+			if (sectorFilter !== '*' && route.route_type == sectorFilter) {
+				s = true;
+			}
+			return r && g && s;
+		}) ?? [];
 
 	function reset() {
 		filters.reset();
@@ -88,7 +90,8 @@
 			}}
 		>
 			<option value="*" selected>All Sectors</option>
-			{#each $routes.sectors as sector}
+			<!-- TODO: manage this better -->
+			{#each $routes.sectors ?? [] as sector}
 				<option value={sector}>{sector}</option>
 			{/each}
 		</select>
