@@ -1,7 +1,7 @@
+import Express from "express";
 import { Context, Markup, Scenes, Telegraf, session } from "telegraf";
 import * as Dotenv from "dotenv";
-import { InlineQueryResult } from "telegraf/typings/core/types/typegram";
-import { SUBMIT_MESSAGE, WELCOME_MESSAGE } from "./constants";
+import { WELCOME_MESSAGE } from "./constants";
 import submitRouteScene from "./scenes/submitRoute";
 import reportScene from "./scenes/report";
 
@@ -52,6 +52,14 @@ bot.command("report", (ctx) => ctx.scene.enter("report"));
 
 bot.launch({
   allowedUpdates: ["message", "callback_query"],
+});
+
+const app = Express();
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+app.listen(3000, () => {
+  console.log(`Express is listening on port 3000`);
 });
 
 // Enable graceful stop
