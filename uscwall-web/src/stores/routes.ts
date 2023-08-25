@@ -15,6 +15,13 @@ function getRoutesFromLocalStorage(): Routes {
 			localStorage.getItem(ROUTES_LOCALSTORAGE_KEY) ?? JSON.stringify(defaultRoutes)
 		);
 	}
+	// Correct localstore corruption
+	if (defaultRoutes.routes == null) {
+		defaultRoutes.routes = [];
+	}
+	if (defaultRoutes.sectors == null) {
+		defaultRoutes.sectors = [];
+	}
 	return defaultRoutes;
 }
 function createRoutesStore() {

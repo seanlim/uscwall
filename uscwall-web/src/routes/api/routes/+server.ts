@@ -2,7 +2,12 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { google, sheets_v4 } from 'googleapis';
 
-const GRADES: string[] = ['⬜️ (V0-V1)', '🟩 (V2-V3)', '🟦 (V4-V5)', '🟥 (≥V5)'];
+const GRADES: string[] = [
+	'⬜️ Beginner (V0-V1)',
+	'🟩 Easy (V2-V3)',
+	'🟦 Intermediate (V4-V5)',
+	'🟥 Hard (≥V5)'
+];
 
 async function createGoogleSheetsClient(): Promise<sheets_v4.Sheets> {
 	const jwtClient = new google.auth.JWT(
@@ -53,8 +58,9 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 		// unique
 		.filter((value, index, arr) => arr.indexOf(value) === index);
 	return json({
-		routes: IDQuery != null && IDQuery != '' ? routes?.filter((r) => r.id === IDQuery) : routes,
+		routes:
+			(IDQuery != null && IDQuery != '' ? routes?.filter((r) => r.id === IDQuery) : routes) ?? [],
 		grades: GRADES,
-		sectors: types
+		sectors: types ?? []
 	});
 };
