@@ -46,7 +46,7 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 	const client = await createGoogleSheetsClient();
 	const res = await client.spreadsheets.values.get({
 		spreadsheetId: env.SPREADSHEET_ID,
-		range: 'vetted worksheet!A2:I'
+		range: 'vetted worksheet!A2:J'
 	});
 	const routes = res.data.values
 		?.map(buildRoute)
