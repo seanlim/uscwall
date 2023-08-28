@@ -54,12 +54,13 @@ bot.launch({
   allowedUpdates: ["message", "callback_query"],
 });
 
+const PORT = 8080;
 const app = Express();
 app.get("/", (req, res) => {
   res.sendStatus(200);
 });
-app.listen(80, () => {
-  console.log(`Express is listening on port 80`);
+app.listen(PORT, () => {
+  console.log(`Express is listening on port ${PORT}`);
 });
 
 // Enable graceful stop
