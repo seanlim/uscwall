@@ -56,7 +56,7 @@ bot.launch({
 
 const app = Express();
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.sendStatus(200);
 });
 app.listen(80, () => {
   console.log(`Express is listening on port 80`);
