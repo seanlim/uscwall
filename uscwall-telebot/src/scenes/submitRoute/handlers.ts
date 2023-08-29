@@ -104,34 +104,45 @@ submissionHandler.action("confirm", async (ctx) => {
   // Obtain image from URL
   const path = await getTelegramFilePath(fileID);
   const imgURL = `https://api.telegram.org/file/bot${process.env.TELEGRAM_TOKEN}/${path}`;
-  // Upload image to imgur
-  await ctx.reply("Finalising submission...");
-  const imgurToken = await getImgurToken();
-  const imgLink = await uploadFileToImgur(imgURL, imgurToken);
 
-  const client = await createGoogleSheetsClient();
-  await client.spreadsheets.values.append({
-    spreadsheetId: process.env.SPREADSHEET_ID,
-    range: "submissions",
-    valueInputOption: "USER_ENTERED",
-    requestBody: {
-      values: [
-        [
-          randomUUID(),
-          imgLink,
-          routeGrade,
-          routeSector,
-          routeName,
-          ctx.from?.first_name,
-          ctx.from?.username,
-          new Date(),
-          ctx.from?.id,
-          0,
-          "pending",
+  await ctx.reply("Finalising submission...");
+
+  // Upload image to imgur
+  try {
+    const imgurToken = await getImgurToken();
+    const imgLink = await uploadFileToImgur(imgURL, imgurToken);
+    const client = await createGoogleSheetsClient();
+    await client.spreadsheets.values.append({
+      spreadsheetId: process.env.SPREADSHEET_ID,
+      range: "submissions",
+      valueInputOption: "USER_ENTERED",
+      requestBody: {
+        values: [
+          [
+            randomUUID(),
+            imgLink,
+            routeGrade,
+            routeSector,
+            routeName,
+            ctx.from?.first_name,
+            ctx.from?.username,
+            new Date(),
+            ctx.from?.id,
+            0,
+            "pending",
+          ],
         ],
-      ],
-    },
-  });
+      },
+    });
+  } catch (err) {
+    console.error(err);
+    await ctx.reply("Apologies, your upload has failed.");
+    await ctx.reply(
+      "We are working to solve this issue, in the meantime feel free to try again."
+    );
+    return ctx.scene.leave();
+  }
+
   console.log("Cells Appended");
 
   await ctx.reply(
