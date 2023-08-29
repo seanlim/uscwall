@@ -10,9 +10,8 @@ import {
 import { randomUUID } from "crypto";
 import {
   createGoogleSheetsClient,
-  getImgurToken,
   getTelegramFilePath,
-  uploadFileToImgur,
+  uploadFileToImgBB,
 } from "../../helpers";
 
 export const uploadHandler = new Composer<USCBotContext>();
@@ -100,17 +99,18 @@ submissionHandler.action("confirm", async (ctx) => {
     telegramFileID: fileID,
   } = ctx.scene.session;
   console.debug(`Submitting with fileID ${fileID}`);
-  await ctx.reply("Uploading image...");
+  await ctx.reply("Finalising submission...");
+
   // Obtain image from URL
   const path = await getTelegramFilePath(fileID);
   const imgURL = `https://api.telegram.org/file/bot${process.env.TELEGRAM_TOKEN}/${path}`;
 
-  await ctx.reply("Finalising submission...");
+  await ctx.reply("Uploading image...");
 
-  // Upload image to imgur
+  // Upload
   try {
-    const imgurToken = await getImgurToken();
-    const imgLink = await uploadFileToImgur(imgURL, imgurToken);
+    const uploadedURL = await uploadFileToImgBB(imgURL);
+    // Insert into worksheet
     const client = await createGoogleSheetsClient();
     await client.spreadsheets.values.append({
       spreadsheetId: process.env.SPREADSHEET_ID,
@@ -120,7 +120,7 @@ submissionHandler.action("confirm", async (ctx) => {
         values: [
           [
             randomUUID(),
-            imgLink,
+            uploadedURL,
             routeGrade,
             routeSector,
             routeName,

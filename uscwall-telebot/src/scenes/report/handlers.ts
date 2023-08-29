@@ -4,9 +4,8 @@ import { message } from "telegraf/filters";
 import { SECTORS_BUTTONS, Sectors } from "../../constants";
 import {
   createGoogleSheetsClient,
-  getImgurToken,
   getTelegramFilePath,
-  uploadFileToImgur,
+  uploadFileToImgBB,
 } from "../../helpers";
 import { randomUUID } from "crypto";
 
@@ -92,8 +91,7 @@ reportImageHandler.on(message("photo"), async (ctx) => {
   await ctx.reply("Uploading report...");
 
   // Upload image to imgur
-  const imgurToken = await getImgurToken();
-  const imgLink = await uploadFileToImgur(imgURL, imgurToken);
+  const uploadedURL = await uploadFileToImgBB(imgURL);
 
   // Add to Sheet
   const client = await createGoogleSheetsClient();
@@ -105,7 +103,7 @@ reportImageHandler.on(message("photo"), async (ctx) => {
       values: [
         [
           randomUUID(),
-          imgLink,
+          uploadedURL,
           reportSector,
           reportDescription,
           ctx.from?.first_name,

@@ -20,7 +20,6 @@ export interface WizardSessionData extends Scenes.WizardSessionData {
   telegramFileID: string;
 }
 export interface USCBotContext extends Context {
-  imgurToken: string;
   // declare scene type
   scene: Scenes.SceneContextScene<USCBotContext, WizardSessionData>;
   // declare wizard type

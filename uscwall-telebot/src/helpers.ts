@@ -2,40 +2,22 @@ import axios from "axios";
 import FormData from "form-data";
 import { google, sheets_v4 } from "googleapis";
 
-export async function getImgurToken(): Promise<string> {
-  const res = await axios.post(
-    `https://api.imgur.com/oauth2/token`,
-    {
-      refresh_token: process.env.IMGUR_REFRESH_TOKEN,
-      client_id: process.env.IMGUR_CLIENT_ID,
-      client_secret: process.env.IMGUR_CLIENT_SECRET,
-      grant_type: "refresh_token",
-    },
-    {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    }
-  );
-  return res.data.access_token;
-}
-
-export async function uploadFileToImgur(
-  imageURL: string,
-  imgurToken: string
-): Promise<string> {
+export async function uploadFileToImgBB(imageURL: string): Promise<string> {
   const form = new FormData();
   console.info(imageURL);
+  form.append("key", process.env.IMGBB_TOKEN);
   form.append("image", imageURL);
-  form.append("description", "TEST");
+  form.append("name", "");
+  form.append("expiration", 15552000); // 6 months
   const res = await axios.request({
     method: "post",
-    url: "https://api.imgur.com/3/image",
+    url: "https://api.imgbb.com/1/upload",
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${imgurToken}`,
     },
     data: form,
   });
-  return res.data.data.link;
+  return res.data.data.url;
 }
 
 export async function createGoogleSheetsClient(): Promise<sheets_v4.Sheets> {
