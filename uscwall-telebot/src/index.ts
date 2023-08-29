@@ -27,34 +27,29 @@ export interface USCBotContext extends Context {
 }
 
 const stage = new Scenes.Stage<USCBotContext>([submitRouteScene, reportScene]);
-
 const bot = new Telegraf<USCBotContext>(process.env.TELEGRAM_TOKEN ?? "");
 bot.use(session());
 bot.use(stage.middleware());
-
 bot.command("quit", async (ctx) => {
   // Explicit usage
   await ctx.telegram.leaveChat(ctx.message.chat.id);
-
   // Using context shortcut
   await ctx.leaveChat();
 });
-
 bot.start(async (ctx) => {
   await ctx.reply(WELCOME_MESSAGE, {
     parse_mode: "MarkdownV2",
   });
 });
-
 bot.command("submit", (ctx) => ctx.scene.enter("submit"));
 bot.command("report", (ctx) => ctx.scene.enter("report"));
-
 bot.launch({
   allowedUpdates: ["message", "callback_query"],
 });
 
 const PORT = 8080;
 const app = Express();
+// For health check (https://docs.digitalocean.com/glossary/health-check/)
 app.get("/", (req, res) => {
   res.sendStatus(200);
 });

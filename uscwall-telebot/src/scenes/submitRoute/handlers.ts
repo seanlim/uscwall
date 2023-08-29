@@ -6,11 +6,13 @@ import {
   GRADES_BUTTONS,
   Sectors,
   SECTORS_BUTTONS,
+  WORKSHEET_SUBMISSIONS,
 } from "../../constants";
 import { randomUUID } from "crypto";
 import {
   createGoogleSheetsClient,
   getTelegramFilePath,
+  insertIntoSheet,
   uploadFileToImgBB,
 } from "../../helpers";
 
@@ -111,29 +113,21 @@ submissionHandler.action("confirm", async (ctx) => {
   try {
     const uploadedURL = await uploadFileToImgBB(imgURL);
     // Insert into worksheet
-    const client = await createGoogleSheetsClient();
-    await client.spreadsheets.values.append({
-      spreadsheetId: process.env.SPREADSHEET_ID,
-      range: "submissions",
-      valueInputOption: "USER_ENTERED",
-      requestBody: {
-        values: [
-          [
-            randomUUID(),
-            uploadedURL,
-            routeGrade,
-            routeSector,
-            routeName,
-            ctx.from?.first_name,
-            ctx.from?.username,
-            new Date(),
-            ctx.from?.id,
-            0,
-            "pending",
-          ],
-        ],
-      },
-    });
+    await insertIntoSheet(WORKSHEET_SUBMISSIONS, [
+      [
+        randomUUID(),
+        uploadedURL,
+        routeGrade,
+        routeSector,
+        routeName,
+        ctx.from?.first_name,
+        ctx.from?.username,
+        new Date(),
+        ctx.from?.id,
+        0,
+        "pending",
+      ],
+    ]);
   } catch (err) {
     console.error(err);
     await ctx.reply("Apologies, your upload has failed.");

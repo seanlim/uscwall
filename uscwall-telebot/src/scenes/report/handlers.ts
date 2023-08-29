@@ -1,10 +1,16 @@
 import { Composer, Markup } from "telegraf";
 import { USCBotContext } from "../..";
 import { message } from "telegraf/filters";
-import { SECTORS_BUTTONS, Sectors } from "../../constants";
+import {
+  SECTORS_BUTTONS,
+  Sectors,
+  WORKSHEET_REPORTS,
+  WORKSHEET_TEST,
+} from "../../constants";
 import {
   createGoogleSheetsClient,
   getTelegramFilePath,
+  insertIntoSheet,
   uploadFileToImgBB,
 } from "../../helpers";
 import { randomUUID } from "crypto";
@@ -41,27 +47,19 @@ reportImageHandler.action("skip", async (ctx) => {
   const { reportSector, reportDescription } = ctx.scene.session;
   await ctx.reply("Uploading report...");
   // Insert into sheet
-  const client = await createGoogleSheetsClient();
-  await client.spreadsheets.values.append({
-    spreadsheetId: process.env.SPREADSHEET_ID,
-    range: "reports",
-    valueInputOption: "USER_ENTERED",
-    requestBody: {
-      values: [
-        [
-          randomUUID(),
-          "",
-          reportSector,
-          reportDescription,
-          ctx.from?.first_name,
-          ctx.from?.username,
-          new Date(),
-          ctx.from?.id,
-          "NEW",
-        ],
-      ],
-    },
-  });
+  await insertIntoSheet(WORKSHEET_REPORTS, [
+    [
+      randomUUID(),
+      "",
+      reportSector,
+      reportDescription,
+      ctx.from?.first_name,
+      ctx.from?.username,
+      new Date(),
+      ctx.from?.id,
+      "NEW",
+    ],
+  ]);
   return ctx.scene.leave();
 });
 reportImageHandler.on(message("text"), async (ctx) => {
@@ -94,27 +92,19 @@ reportImageHandler.on(message("photo"), async (ctx) => {
   const uploadedURL = await uploadFileToImgBB(imgURL);
 
   // Add to Sheet
-  const client = await createGoogleSheetsClient();
-  await client.spreadsheets.values.append({
-    spreadsheetId: process.env.SPREADSHEET_ID,
-    range: "reports",
-    valueInputOption: "USER_ENTERED",
-    requestBody: {
-      values: [
-        [
-          randomUUID(),
-          uploadedURL,
-          reportSector,
-          reportDescription,
-          ctx.from?.first_name,
-          ctx.from?.username,
-          new Date(),
-          ctx.from?.id,
-          "NEW",
-        ],
-      ],
-    },
-  });
+  await insertIntoSheet(WORKSHEET_REPORTS, [
+    [
+      randomUUID(),
+      uploadedURL,
+      reportSector,
+      reportDescription,
+      ctx.from?.first_name,
+      ctx.from?.username,
+      new Date(),
+      ctx.from?.id,
+      "NEW",
+    ],
+  ]);
   console.log("Cells Appended");
 
   return ctx.scene.leave();

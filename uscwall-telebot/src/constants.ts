@@ -48,3 +48,8 @@ export const GRADES_BUTTONS = [
   [Grades.Easy, Grades.Medium],
   [Grades.Hard, Grades.Harder],
 ];
+
+export const WORKSHEET_SUBMISSIONS = "submissions";
+export const WORKSHEET_REPORTS = "reports";
+export const WORKSHEET_FEEDBACKS = "feedbacks";
+export const WORKSHEET_TEST = "test";
