@@ -40,7 +40,8 @@ function buildRoute(data: string[]): App.Route {
 export const GET: RequestHandler = async ({ url, setHeaders }) => {
 	const IDQuery = url.searchParams.get('id');
 	setHeaders({
-		'cache-control': 'max-age=604800, stale-while-revalidate=60'
+		// Cache for 1 hour, reuse up to one day
+		'cache-control': 'max-age=3600, must-revalidate'
 	});
 
 	const client = await createGoogleSheetsClient();
