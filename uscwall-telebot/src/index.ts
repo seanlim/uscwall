@@ -4,6 +4,7 @@ import * as Dotenv from "dotenv";
 import { WELCOME_MESSAGE } from "./constants";
 import submitRouteScene from "./scenes/submitRoute";
 import reportScene from "./scenes/report";
+import feedbackScene from "./scenes/feedback";
 
 Dotenv.config();
 
@@ -16,6 +17,8 @@ export interface WizardSessionData extends Scenes.WizardSessionData {
   reportDescription: string;
   reportSector: string;
   reportHasImage: boolean;
+  // Feedback submission
+  feedbackDescription: string;
   // For uploads
   telegramFileID: string;
 }
@@ -26,7 +29,11 @@ export interface USCBotContext extends Context {
   wizard: Scenes.WizardContextWizard<USCBotContext>;
 }
 
-const stage = new Scenes.Stage<USCBotContext>([submitRouteScene, reportScene]);
+const stage = new Scenes.Stage<USCBotContext>([
+  submitRouteScene,
+  reportScene,
+  feedbackScene,
+]);
 const bot = new Telegraf<USCBotContext>(process.env.TELEGRAM_TOKEN ?? "");
 bot.use(session());
 bot.use(stage.middleware());
@@ -43,6 +50,7 @@ bot.start(async (ctx) => {
 });
 bot.command("submit", (ctx) => ctx.scene.enter("submit"));
 bot.command("report", (ctx) => ctx.scene.enter("report"));
+bot.command("feedback", (ctx) => ctx.scene.enter("feedback"));
 bot.launch({
   allowedUpdates: ["message", "callback_query"],
 });
