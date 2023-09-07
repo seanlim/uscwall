@@ -1,5 +1,5 @@
 import Express from "express";
-import { Context, Markup, Scenes, Telegraf, session } from "telegraf";
+import { Context, Scenes, Telegraf, session } from "telegraf";
 import * as Dotenv from "dotenv";
 import { WELCOME_MESSAGE } from "./constants";
 import submitRouteScene from "./scenes/submitRoute";

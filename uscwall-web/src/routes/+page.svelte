@@ -58,10 +58,12 @@
 		}
 	}
 
-	onMount(() => fetchRoutes());
+	onMount(() => {
+		fetchRoutes();
+	});
 </script>
 
-<div class="level">
+<div class="filters-container">
 	<input
 		class="input"
 		type="text"
@@ -69,37 +71,33 @@
 		bind:value={searchQuery}
 		on:change={() => filters.update('query', searchQuery)}
 	/>
-	<div class="select">
-		<select
-			bind:value={gradeFilter}
-			on:change={() => {
-				filters.update('grade', gradeFilter);
-			}}
-		>
-			<option value="*" selected>All grades</option>
-			{#each $routes.grades as grade}
-				<option value={grade}>{grade}</option>
-			{/each}
-		</select>
-	</div>
-	<div class="select">
-		<select
-			bind:value={sectorFilter}
-			on:change={() => {
-				filters.update('sector', sectorFilter);
-			}}
-		>
-			<option value="*" selected>All Sectors</option>
-			<!-- TODO: manage this better -->
-			{#each $routes.sectors ?? [] as sector}
-				<option value={sector}>{sector}</option>
-			{/each}
-		</select>
-	</div>
-	<button class="button" on:click={reset}>Reset</button>
+	<select
+		bind:value={gradeFilter}
+		on:change={() => {
+			filters.update('grade', gradeFilter);
+		}}
+	>
+		<option value="*" selected>All grades</option>
+		{#each $routes.grades as grade}
+			<option value={grade}>{grade}</option>
+		{/each}
+	</select>
+	<select
+		bind:value={sectorFilter}
+		on:change={() => {
+			filters.update('sector', sectorFilter);
+		}}
+	>
+		<option value="*" selected>All Sectors</option>
+		<!-- TODO: manage this better -->
+		{#each $routes.sectors ?? [] as sector}
+			<option value={sector}>{sector}</option>
+		{/each}
+	</select>
+	<button class="button" on:click={reset}>Reset filters</button>
 </div>
 <hr />
-<div class="routes">
+<div class="routes-container">
 	{#if filteredRoutes.length < 1}
 		{#if isLoading}
 			<RoutesSkeleton />
@@ -166,7 +164,16 @@
 	.route:active {
 		outline: auto;
 	}
-	.routes {
+
+	.filters-container {
+		display: flex;
+		flex-direction: column;
+		padding: 0.3rem;
+	}
+	.filters-container > * {
+		margin-bottom: 10px;
+	}
+	.routes-container {
 		padding: 0 0.5rem;
 		margin-bottom: 1rem;
 	}

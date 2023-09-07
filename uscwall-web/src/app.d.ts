@@ -19,3 +19,4 @@ declare namespace App {
 	// interface Error {}
 	// interface Platform {}
 }
+type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];

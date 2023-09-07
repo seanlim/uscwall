@@ -1,11 +1,28 @@
-<script>
+<script lang="ts">
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { PUBLIC_HOSTNAME } from '$env/static/public';
+	import { onMount } from 'svelte';
+	import WelcomeModal from './WelcomeModal.svelte';
+	import { session } from '../stores/session';
 
 	const handleLogoClick = () => {
 		goto(`${base}/`);
 	};
+
+	let showWelcomeModal = false;
+
+	const handleAboutClick = (e: Event) => {
+		e.preventDefault();
+		showWelcomeModal = true;
+	};
+
+	onMount(() => {
+		console.info($session);
+		if ($session.showWelcome) {
+			showWelcomeModal = true;
+		}
+	});
 </script>
 
 <nav aria-label="main navigation">
@@ -13,8 +30,9 @@
 		<img class="logo" src={`${PUBLIC_HOSTNAME}/logo.webp`} alt="logo" />
 		<h3>NUS USC Wall</h3>
 	</div>
-	<a href={`${base}/about`}>About</a>
+	<a href="/" on:click={handleAboutClick}>About</a>
 </nav>
+<WelcomeModal bind:showModal={showWelcomeModal} />
 
 <style>
 	nav {
@@ -23,10 +41,10 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0.5rem;
-		background: rgba(255, 255, 255, 0.7);
+		background: rgba(var(--primary-rgb), 0.7);
 		backdrop-filter: blur(5px);
 		-webkit-backdrop-filter: blur(5px);
-		border: 1px solid rgba(255, 255, 255, 0.3);
+		border-bottom: 1px solid var(--gray);
 		z-index: 999;
 
 		position: sticky;
