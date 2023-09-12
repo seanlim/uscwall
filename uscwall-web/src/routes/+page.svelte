@@ -95,6 +95,19 @@
 		{/each}
 	</select>
 	<button class="button" on:click={reset}>Reset filters</button>
+
+	<div>
+		<script
+			async
+			src="https://telegram.org/js/telegram-widget.js?22"
+			data-telegram-login="beep_boop_test_bot"
+			data-size="medium"
+			data-auth-url="/auth"
+			data-request-access="write"
+		></script>
+		<script type="text/javascript">
+		</script>
+	</div>
 </div>
 <hr />
 <div class="routes-container">

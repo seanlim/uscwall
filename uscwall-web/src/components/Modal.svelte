@@ -28,9 +28,11 @@
 		border-radius: 5px;
 		border: none;
 		padding: 0;
+		background: var(--primary);
+		color: var(--secondary);
 	}
 	dialog::backdrop {
-		background: rgba(0, 0, 0, 0.3);
+		background: rgba(0, 0, 0, 0.6);
 	}
 	dialog > div {
 		padding: 0.8rem;
