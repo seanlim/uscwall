@@ -6,8 +6,13 @@
 	import WelcomeModal from './WelcomeModal.svelte';
 	import { session } from '../stores/session';
 	import TelegramLogin from './TelegramLogin.svelte';
+	import { page } from '$app/stores';
 
 	const handleLogoClick = () => {
+		if ($page.url.pathname === '/') {
+			showWelcomeModal = true;
+			return;
+		}
 		goto(`${base}/`);
 	};
 
@@ -31,12 +36,17 @@
 		<h3>NUS USC Wall</h3>
 	</div>
 	<div class="right-container">
-		<a href="/" on:click={handleAboutClick}>About</a>
-		<TelegramLogin
-			username={PUBLIC_TELEGRAM_BOT_USERNAME}
-			authType="redirect"
-			redirectURL="/auth"
-		/>
+		{#if $session.user == null}
+			<TelegramLogin
+				username={PUBLIC_TELEGRAM_BOT_USERNAME}
+				authType="redirect"
+				redirectURL="/auth"
+			/>
+		{:else}
+			<a href="/me" data-sveltekit-preload-data="hover">
+				<img class="avatar-img" src={$session.user.photoURL} alt="telegram dp" />
+			</a>
+		{/if}
 	</div>
 </nav>
 <WelcomeModal bind:showModal={showWelcomeModal} />
@@ -83,5 +93,10 @@
 	}
 	.right-container > * {
 		margin-right: 0.4rem;
+	}
+	.avatar-img {
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
 	}
 </style>

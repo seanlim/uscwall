@@ -15,7 +15,9 @@ export const load: Load = async ({ url }) => {
 	const dataCheckString = a.join('\n');
 
 	if (hash == null || dataCheckString == null || env.TELEGRAM_TOKEN == null) {
-		console.error('missing params');
+		return {
+			auth: false
+		};
 	}
 
 	const secretKey = crypto.createHash('sha256').update(env.TELEGRAM_TOKEN);
@@ -25,6 +27,13 @@ export const load: Load = async ({ url }) => {
 		.digest('hex');
 
 	if (checkHash === hash) {
-		console.info('authed');
+		return {
+			auth: true,
+			username: params.get('username'),
+			photoURL: params.get('photo_url')
+		};
 	}
+	return {
+		auth: false
+	};
 };

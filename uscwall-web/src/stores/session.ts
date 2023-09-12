@@ -6,6 +6,10 @@ const SESSION_LOCALSTORAGE_KEY = 'session';
 
 type SessionData = {
 	showWelcome: boolean;
+	user?: {
+		telegramUsername: string;
+		photoURL: string;
+	};
 };
 
 const defaultSessionData: SessionData = {
