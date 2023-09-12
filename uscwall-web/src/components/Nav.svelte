@@ -5,6 +5,8 @@
 	import { onMount } from 'svelte';
 	import WelcomeModal from './WelcomeModal.svelte';
 	import { session } from '../stores/session';
+	import TelegramLogin from './TelegramLogin.svelte';
+	import { env } from '$env/dynamic/private';
 
 	const handleLogoClick = () => {
 		goto(`${base}/`);
@@ -18,7 +20,6 @@
 	};
 
 	onMount(() => {
-		console.info($session);
 		if ($session.showWelcome) {
 			showWelcomeModal = true;
 		}
@@ -30,7 +31,10 @@
 		<img class="logo" src={`${PUBLIC_HOSTNAME}/logo.webp`} alt="logo" />
 		<h3>NUS USC Wall</h3>
 	</div>
-	<a href="/" on:click={handleAboutClick}>About</a>
+	<div class="right-container">
+		<a href="/" on:click={handleAboutClick}>About</a>
+		<TelegramLogin username={env.TELEGRAM_BOT_USERNAME} authType="redirect" redirectURL="/auth" />
+	</div>
 </nav>
 <WelcomeModal bind:showModal={showWelcomeModal} />
 
@@ -67,5 +71,14 @@
 	}
 	.logo-button:active {
 		opacity: 0.5;
+	}
+
+	.right-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+	.right-container > * {
+		margin-right: 0.4rem;
 	}
 </style>
