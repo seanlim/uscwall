@@ -17,7 +17,7 @@ export async function createGoogleSheetsClient(): Promise<sheets_v4.Sheets> {
 export async function insertIntoSheet(range: string, values: any[][]) {
 	const client = await createGoogleSheetsClient();
 	await client.spreadsheets.values.append({
-		spreadsheetId: process.env.SPREADSHEET_ID,
+		spreadsheetId: env.SPREADSHEET_ID,
 		range: range,
 		valueInputOption: 'USER_ENTERED',
 		requestBody: {

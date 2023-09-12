@@ -149,6 +149,9 @@
 	button:active {
 		background: var(--gray);
 	}
+	button:disabled {
+		opacity: 0.5;
+	}
 
 	input[type='text'] {
 		padding: 0.5rem 0.4rem;
