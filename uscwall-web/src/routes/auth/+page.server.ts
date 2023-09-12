@@ -7,21 +7,23 @@ export const load: Load = async ({ url }) => {
 	const hash = params.get('hash');
 	params.delete('hash');
 	params.sort();
-	let dataCheckString = '';
+
+	const a: string[] = [];
 	for (const [key, value] of params.entries()) {
-		dataCheckString += `${key}=${value}\n`;
+		a.push(`${key}=${value}`);
 	}
-	console.info(dataCheckString);
+	const dataCheckString = a.join('\n');
+
 	if (hash == null || dataCheckString == null || env.TELEGRAM_TOKEN == null) {
 		console.error('missing params');
 	}
+
 	const secretKey = crypto.createHash('sha256').update(env.TELEGRAM_TOKEN);
 	const checkHash = crypto
 		.createHmac('sha256', secretKey.digest())
 		.update(dataCheckString)
 		.digest('hex');
-	console.info(hash);
-	console.info(checkHash);
+
 	if (checkHash === hash) {
 		console.info('authed');
 	}
