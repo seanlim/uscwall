@@ -5,6 +5,7 @@
 
 	import { resolveTag } from '../../../helpers';
 	import { routes } from '../../../stores/routes';
+	import AscentModal from '../../../components/AscentModal.svelte';
 
 	async function fetchRoutes() {
 		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
@@ -19,6 +20,12 @@
 	onMount(() => fetchRoutes());
 
 	const route = $routes.routes.find((r) => r.id == $page.params.slug);
+
+	const handleShowAscentModal = () => {
+		showAscentModal = true;
+	};
+
+	let showAscentModal = false;
 </script>
 
 {#if route != null}
@@ -33,6 +40,8 @@
 		</p>
 		<button on:click={() => window.open(route.image_url, '_blank')}>View/Download Full Image</button
 		>
+		<button on:click={handleShowAscentModal}>Log Ascent...</button>
+		<AscentModal bind:showModal={showAscentModal} routeID={route.id} />
 	</div>
 {:else}
 	Not found
