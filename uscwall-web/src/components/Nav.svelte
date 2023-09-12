@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
-	import { PUBLIC_HOSTNAME } from '$env/static/public';
+	import { PUBLIC_HOSTNAME, PUBLIC_TELEGRAM_BOT_USERNAME } from '$env/static/public';
 	import { onMount } from 'svelte';
 	import WelcomeModal from './WelcomeModal.svelte';
 	import { session } from '../stores/session';
 	import TelegramLogin from './TelegramLogin.svelte';
-	import { env } from '$env/dynamic/private';
 
 	const handleLogoClick = () => {
 		goto(`${base}/`);
@@ -33,7 +32,11 @@
 	</div>
 	<div class="right-container">
 		<a href="/" on:click={handleAboutClick}>About</a>
-		<TelegramLogin username={env.TELEGRAM_BOT_USERNAME} authType="redirect" redirectURL="/auth" />
+		<TelegramLogin
+			username={PUBLIC_TELEGRAM_BOT_USERNAME}
+			authType="redirect"
+			redirectURL="/auth"
+		/>
 	</div>
 </nav>
 <WelcomeModal bind:showModal={showWelcomeModal} />
