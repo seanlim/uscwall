@@ -6,6 +6,10 @@
 	import { resolveTag } from '../../../helpers';
 	import { routes } from '../../../stores/routes';
 	import AscentModal from '../../../components/AscentModal.svelte';
+	import { ascents } from '../../../stores/ascents';
+
+	const routeID = $page.params.slug;
+	$: userSent = $ascents.ascents.map((a) => a.route_id).includes(routeID);
 
 	async function fetchRoutes() {
 		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
@@ -17,9 +21,11 @@
 		}
 	}
 
-	onMount(() => fetchRoutes());
+	onMount(() => {
+		fetchRoutes();
+	});
 
-	const route = $routes.routes.find((r) => r.id == $page.params.slug);
+	const route = $routes.routes?.find((r) => r.id == routeID);
 
 	const handleShowAscentModal = () => {
 		showAscentModal = true;
@@ -34,6 +40,9 @@
 		<span class="title">
 			{route.route_name}
 			<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
+			{#if userSent}
+				(sent)
+			{/if}
 		</span>
 		<p>
 			Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents

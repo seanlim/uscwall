@@ -45,6 +45,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	if (routeIndex === -1) {
 		return json({ ok: false });
 	}
+
 	// increment ascent counter
 	await client.spreadsheets.values.update({
 		spreadsheetId: env.SPREADSHEET_ID,
@@ -54,6 +55,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			values: [[routes[routeIndex].ascents + 1]]
 		}
 	});
+
 	// insert into ascent sheet
 	await insertIntoSheet(SHEET_ASCENTS, [[routeID, username, noOfAttempts, rating, new Date()]]);
 	return json({ ok: true });

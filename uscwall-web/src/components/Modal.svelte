@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let showModal: boolean;
 
-	export let dialog: HTMLDialogElement = undefined;
+	export let dialog: HTMLDialogElement | undefined = undefined;
 
 	$: if (dialog && showModal) dialog.showModal();
 </script>
@@ -10,7 +10,7 @@
 <dialog
 	bind:this={dialog}
 	on:close={() => (showModal = false)}
-	on:click|self={() => dialog.close()}
+	on:click|self={() => dialog?.close()}
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation>
@@ -18,7 +18,7 @@
 		<slot />
 		<hr />
 		<!-- svelte-ignore a11y-autofocus -->
-		<button autofocus on:click={() => dialog.close()}>Dismiss</button>
+		<button autofocus on:click={() => dialog?.close()}>Dismiss</button>
 	</div>
 </dialog>
 
