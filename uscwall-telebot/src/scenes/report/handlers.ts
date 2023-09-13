@@ -1,12 +1,7 @@
 import { Composer, Markup } from "telegraf";
 import { USCBotContext } from "../..";
 import { message } from "telegraf/filters";
-import {
-  SECTORS_BUTTONS,
-  Sectors,
-  WORKSHEET_REPORTS,
-  WORKSHEET_TEST,
-} from "../../constants";
+import { SECTORS_BUTTONS, Sectors, WORKSHEET_REPORTS } from "../../constants";
 import {
   createGoogleSheetsClient,
   getTelegramFilePath,
@@ -86,6 +81,7 @@ reportImageHandler.on(message("photo"), async (ctx) => {
   const path = await getTelegramFilePath(fileID);
   const imgURL = `https://api.telegram.org/file/bot${process.env.TELEGRAM_TOKEN}/${path}`;
 
+  // TODO: add confirm step
   await ctx.reply("Uploading report...");
 
   // Upload image to imgur

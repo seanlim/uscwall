@@ -11,7 +11,8 @@
 	:root {
 		--selection: #0091ea;
 
-		--primary: #fff;
+		--primary-rgb: 255, 255, 255;
+		--primary: #ffffff;
 		--secondary: #000;
 		--gray: #eaeaea;
 		--light-gray: #f5f5f5;
@@ -23,7 +24,8 @@
 
 	@media (prefers-color-scheme: dark) {
 		:root {
-			--primary: #000;
+			--primary-rgb: 0, 0, 0;
+			--primary: #000000;
 			--secondary: #fff;
 			--gray: #ccc;
 			--light-gray: #242323;
@@ -128,5 +130,32 @@
 		100% {
 			opacity: 1;
 		}
+	}
+
+	hr {
+		border: solid 0.3px var(--gray);
+	}
+
+	button {
+		padding: 0.5rem 0.4rem;
+		border-radius: 10px;
+		outline: none;
+		border: none;
+		background: var(--secondary);
+		color: var(--primary);
+		font-weight: bold;
+		font-size: 0.9rem;
+	}
+	button:active {
+		background: var(--gray);
+	}
+	button:disabled {
+		opacity: 0.5;
+	}
+
+	input[type='text'] {
+		padding: 0.5rem 0.4rem;
+		border: solid 1px var(--light-gray);
+		outline: none;
 	}
 </style>

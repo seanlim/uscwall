@@ -8,10 +8,13 @@
 	import { routes } from '../stores/routes';
 	import { onMount } from 'svelte';
 	import RoutesSkeleton from '../components/RoutesSkeleton.svelte';
+	import { session } from '../stores/session';
+	import { ascents } from '../stores/ascents';
 
 	let searchQuery: string = $filters.query;
 	let gradeFilter: string = $filters.grade;
 	let sectorFilter: string = $filters.sector;
+	let hideSent: boolean = false;
 
 	let isLoading = false;
 	let isError = false;
@@ -34,6 +37,13 @@
 			let s = sectorFilter == '*';
 			if (sectorFilter !== '*' && route.route_type == sectorFilter) {
 				s = true;
+			}
+			if (
+				$session.user != null &&
+				hideSent &&
+				$ascents.ascents.map((a) => a.route_id).includes(route.id)
+			) {
+				return false;
 			}
 			return r && g && s;
 		}) ?? [];
@@ -58,10 +68,21 @@
 		}
 	}
 
-	onMount(() => fetchRoutes());
+	async function fetchAscents() {
+		const res = await fetch(`/api/ascents?username=${$session.user?.telegramUsername}`);
+		const data = await res.json();
+		ascents.update('ascents', data.results);
+	}
+
+	onMount(() => {
+		fetchRoutes();
+		if ($session.user != null) {
+			fetchAscents();
+		}
+	});
 </script>
 
-<div class="level">
+<div class="filters-container">
 	<input
 		class="input"
 		type="text"
@@ -69,37 +90,39 @@
 		bind:value={searchQuery}
 		on:change={() => filters.update('query', searchQuery)}
 	/>
-	<div class="select">
-		<select
-			bind:value={gradeFilter}
-			on:change={() => {
-				filters.update('grade', gradeFilter);
-			}}
-		>
-			<option value="*" selected>All grades</option>
-			{#each $routes.grades as grade}
-				<option value={grade}>{grade}</option>
-			{/each}
-		</select>
-	</div>
-	<div class="select">
-		<select
-			bind:value={sectorFilter}
-			on:change={() => {
-				filters.update('sector', sectorFilter);
-			}}
-		>
-			<option value="*" selected>All Sectors</option>
-			<!-- TODO: manage this better -->
-			{#each $routes.sectors ?? [] as sector}
-				<option value={sector}>{sector}</option>
-			{/each}
-		</select>
-	</div>
-	<button class="button" on:click={reset}>Reset</button>
+	<select
+		bind:value={gradeFilter}
+		on:change={() => {
+			filters.update('grade', gradeFilter);
+		}}
+	>
+		<option value="*" selected>All grades</option>
+		{#each $routes.grades as grade}
+			<option value={grade}>{grade}</option>
+		{/each}
+	</select>
+	<select
+		bind:value={sectorFilter}
+		on:change={() => {
+			filters.update('sector', sectorFilter);
+		}}
+	>
+		<option value="*" selected>All Sectors</option>
+		<!-- TODO: manage this better -->
+		{#each $routes.sectors ?? [] as sector}
+			<option value={sector}>{sector}</option>
+		{/each}
+	</select>
+	{#if $session.user != null}
+		<div class="ascents-checkbox-container">
+			<input id="hide-ascents-checkbox" type="checkbox" bind:checked={hideSent} />
+			<label for="hide-ascents-checkbox">Hide sent problems</label>
+		</div>
+	{/if}
+	<button class="button" on:click={reset}>Reset filters</button>
 </div>
 <hr />
-<div class="routes">
+<div class="routes-container">
 	{#if filteredRoutes.length < 1}
 		{#if isLoading}
 			<RoutesSkeleton />
@@ -122,6 +145,8 @@
 					<a href={`${base}/v/${route.id}`}>
 						{route.route_name}
 					</a>
+					{#if $session.user != null && $ascents.ascents.map((a) => a.route_id).includes(route.id)}
+						{' '} ✅{/if}
 				</span>
 				<span class={`tag ${resolveTag(route.grade)}`}>
 					{route.grade}
@@ -141,7 +166,6 @@
 		padding: 0.3rem 0.5rem;
 		border-bottom: var(--light-gray) 1px solid;
 	}
-
 	.route .title-row {
 		display: flex;
 		flex-direction: row;
@@ -166,8 +190,25 @@
 	.route:active {
 		outline: auto;
 	}
-	.routes {
+
+	.filters-container {
+		display: flex;
+		flex-direction: column;
+		padding: 0.3rem;
+	}
+	.filters-container > * {
+		margin-bottom: 10px;
+	}
+	.routes-container {
 		padding: 0 0.5rem;
 		margin-bottom: 1rem;
+	}
+	.ascents-checkbox-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+	.ascents-checkbox-container > * {
+		margin-right: 0.3rem;
 	}
 </style>

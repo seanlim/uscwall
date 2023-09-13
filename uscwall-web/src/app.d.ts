@@ -14,8 +14,16 @@ declare namespace App {
 		setter_id: string;
 		ascents: number;
 	};
+	type Ascent = {
+		route_id: string;
+		username: string;
+		attempts: string;
+		rating: string;
+		date_time: Date;
+	};
 	// interface Locals {}
 	// interface PageData {}
 	// interface Error {}
 	// interface Platform {}
 }
+type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
