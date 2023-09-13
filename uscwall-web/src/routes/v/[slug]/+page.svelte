@@ -41,7 +41,7 @@
 			{route.route_name}
 			<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
 			{#if userSent}
-				(sent)
+				✅
 			{/if}
 		</span>
 		<p>
