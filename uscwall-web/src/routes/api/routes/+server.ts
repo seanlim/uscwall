@@ -24,13 +24,8 @@ function buildRoute(data: string[]): App.Route {
 	};
 }
 
-export const GET: RequestHandler = async ({ url, setHeaders }) => {
+export const GET: RequestHandler = async ({ url }) => {
 	const IDQuery = url.searchParams.get('id');
-	setHeaders({
-		// Cache for 1 hour, reuse up to one day
-		'cache-control': 'max-age=3600, must-revalidate'
-	});
-
 	const client = await createGoogleSheetsClient();
 	const res = await client.spreadsheets.values.get({
 		spreadsheetId: env.SPREADSHEET_ID,
