@@ -11,14 +11,9 @@ function buildAscents(data: string[]): App.Ascent {
 		date_time: new Date(data[4])
 	};
 }
-export const GET: RequestHandler = async ({ url, setHeaders }) => {
+export const GET: RequestHandler = async ({ url }) => {
 	const usernameQuery = url.searchParams.get('username');
 	const routeIDQuery = url.searchParams.get('route_id');
-
-	setHeaders({
-		// Cache for 1 hour, reuse up to one day
-		'cache-control': 'max-age=3600, must-revalidate'
-	});
 
 	const client = await createGoogleSheetsClient();
 	const res = await client.spreadsheets.values.get({
