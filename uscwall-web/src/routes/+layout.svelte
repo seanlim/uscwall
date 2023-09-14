@@ -90,6 +90,7 @@
 		border-radius: 5px;
 		padding: 0.5rem;
 		font-weight: bold;
+		font-size: 0.8rem;
 	}
 
 	.tag.is-easy {
@@ -105,7 +106,7 @@
 	.skeleton {
 		width: 100%;
 		height: 100%;
-		background: white;
+		background: var(--primary);
 		border-radius: 10px;
 		display: flex;
 		margin-bottom: 20px;
@@ -114,7 +115,7 @@
 	.skeleton-inner {
 		flex: 1;
 		min-height: 30px;
-		background: #f5f5f5;
+		background: var(--light-gray);
 		border-radius: 5px;
 		animation: loading 1s infinite ease-in;
 		margin: 3px;
