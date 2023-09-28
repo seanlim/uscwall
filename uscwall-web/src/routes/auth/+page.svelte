@@ -21,7 +21,7 @@
 </script>
 
 {#if data.auth === true}
-	<div class="container ">
+	<div class="container responsive-width">
 		<img class="user-picture" src={data.photoURL} alt="telegram dp" />
 		<b>Signed in successfully as @{data.username}</b>
 	</div>

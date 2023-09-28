@@ -20,7 +20,29 @@ function buildRoute(data: string[]): App.Route {
 		setter_handle: data[6],
 		date_time: new Date(data[7]),
 		setter_id: data[8],
-		ascents: parseInt(data[9])
+		ascents: parseInt(data[9]),
+		next: null,
+		prev: null
+	};
+}
+
+function fillNext(route: App.Route, index: number, routes: App.Route[]): App.Route {
+	if (index + 1 === routes.length) {
+		return route;
+	}
+	return {
+		...route,
+		next: routes[index + 1].id
+	};
+}
+
+function fillPrev(route: App.Route, index: number, routes: App.Route[]): App.Route {
+	if (index === 0) {
+		return route;
+	}
+	return {
+		...route,
+		prev: routes[index - 1].id
 	};
 }
 
@@ -33,7 +55,9 @@ export const GET: RequestHandler = async ({ url }) => {
 	});
 	const routes = res.data.values
 		?.map(buildRoute)
-		.sort((a, b) => GRADES.indexOf(a.grade) - GRADES.indexOf(b.grade));
+		.sort((a, b) => GRADES.indexOf(a.grade) - GRADES.indexOf(b.grade))
+		.map(fillNext)
+		.map(fillPrev);
 	const types = routes
 		?.map((r) => r.route_type)
 		// unique

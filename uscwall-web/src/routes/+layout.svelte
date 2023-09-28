@@ -2,7 +2,7 @@
 	import Nav from '../components/Nav.svelte';
 </script>
 
-<div class="container">
+<div class="container responsive-width">
 	<Nav />
 	<slot />
 </div>
@@ -66,10 +66,13 @@
 		background: var(--light-gray);
 	}
 
+	.responsive-width {
+		max-width: 500px !important;
+	}
+
 	.container {
 		flex: 1;
 		margin: auto;
-		max-width: 500px !important;
 		height: 100%;
 		max-height: 70rem;
 		border-radius: 10px;
@@ -79,8 +82,11 @@
 	}
 	@media only screen and (max-width: 450px) {
 		/* Styles here */
-		.container {
+
+		.responsive-width {
 			width: 100vw;
+		}
+		.container {
 			border-radius: 0;
 		}
 	}

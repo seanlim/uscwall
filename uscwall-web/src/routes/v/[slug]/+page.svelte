@@ -7,9 +7,11 @@
 	import { routes } from '../../../stores/routes';
 	import AscentModal from '../../../components/AscentModal.svelte';
 	import { ascents } from '../../../stores/ascents';
+	import { goto } from '$app/navigation';
 
-	const routeID = $page.params.slug;
+	let routeID = $page.params.slug;
 	$: userSent = $ascents.ascents.map((a) => a.route_id).includes(routeID);
+	$: route = $routes.routes?.find((r) => r.id == routeID);
 
 	async function fetchRoutes() {
 		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
@@ -25,10 +27,15 @@
 		fetchRoutes();
 	});
 
-	const route = $routes.routes?.find((r) => r.id == routeID);
-
 	const handleShowAscentModal = () => {
 		showAscentModal = true;
+	};
+
+	const handleGoToRoute = (nextID?: string | null) => () => {
+		if (nextID != null) {
+			goto(`/v/${nextID}`);
+			routeID = nextID;
+		}
 	};
 
 	let showAscentModal = false;
@@ -37,20 +44,26 @@
 {#if route != null}
 	<div class="route">
 		<img class="image" src={route.image_url} alt={route.route_name} />
-		<span class="title">
-			{route.route_name}
-			<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
-			{#if userSent}
-				✅
-			{/if}
-		</span>
-		<p>
-			Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
-		</p>
 		<button on:click={() => window.open(route.image_url, '_blank')}>View/Download Full Image</button
 		>
 		<button on:click={handleShowAscentModal}>Log Ascent...</button>
 		<AscentModal bind:showModal={showAscentModal} routeID={route.id} />
+		<div id="route-toolbar">
+			<div class="toolbar-content responsive-width">
+				<button on:click={handleGoToRoute(route.prev)} disabled={route.prev === null}>Prev.</button>
+				<div class="toolbar-center">
+					{route.route_name}
+					<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
+					{#if userSent}
+						✅
+					{/if}
+					<small>
+						Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
+					</small>
+				</div>
+				<button on:click={handleGoToRoute(route.next)} disabled={route.next === null}>Next</button>
+			</div>
+		</div>
 	</div>
 {:else}
 	Not found
@@ -67,11 +80,29 @@
 		height: 100%;
 		overflow: none;
 	}
-	.title {
-		inline-size: 80vw;
-		font-size: 1.3rem;
-		line-height: 2.2rem;
-		font-weight: bold;
-		overflow-wrap: break-word;
+	#route-toolbar {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		border-top: var(--light-gray) solid 0.3px;
+		background: var(--primary);
+	}
+	.toolbar-content {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 0.5rem;
+	}
+
+	.toolbar-center {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 </style>

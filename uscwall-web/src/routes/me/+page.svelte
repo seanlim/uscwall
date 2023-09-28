@@ -9,13 +9,13 @@
 </script>
 
 {#if $session.user}
-	<div class="container">
+	<div class="container responsive-width">
 		<img class="user-picture" src={$session.user?.photoURL} alt="telegram dp" />
 		<b>Signed in as @{$session.user?.telegramUsername}</b>
 		<button on:click={handleSignOut}>Sign out</button>
 	</div>
 {:else}
-	<div class="container">
+	<div class="container responsive-width">
 		<b>Not signed in</b>
 	</div>
 {/if}
