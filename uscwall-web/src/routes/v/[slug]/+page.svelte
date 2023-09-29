@@ -53,10 +53,10 @@
 				<button on:click={handleGoToRoute(route.prev)} disabled={route.prev === null}>Prev.</button>
 				<div class="toolbar-center">
 					{route.route_name}
-					<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
 					{#if userSent}
 						✅
 					{/if}
+					<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
 					<small>
 						Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
 					</small>
@@ -77,6 +77,7 @@
 	}
 	.route {
 		padding: 0 1rem;
+		padding-bottom: 10rem;
 		height: 100%;
 		overflow: none;
 	}
@@ -91,6 +92,7 @@
 		justify-content: center;
 		border-top: var(--light-gray) solid 0.3px;
 		background: var(--primary);
+		height: 5rem;
 	}
 	.toolbar-content {
 		display: flex;
@@ -104,5 +106,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		text-align: center;
 	}
 </style>
