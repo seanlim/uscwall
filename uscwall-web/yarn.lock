@@ -198,6 +198,11 @@
   resolved "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
   integrity sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==
 
+"@types/mixpanel-browser@^2.47.4":
+  version "2.47.4"
+  resolved "https://registry.npmjs.org/@types/mixpanel-browser/-/mixpanel-browser-2.47.4.tgz#38f0382ae51ca509a6686312ce40cc322cede1ca"
+  integrity sha512-wAwhSaIk//XY+O5Y8vnlb0Dc9Rpt0s+yHRXf1cGIYM4G5efzRjNeqWEqROf4qzP9FUgVE2M0Z8Pg9BV8Dt46yw==
+
 "@types/node@*":
   version "18.11.3"
   resolved "https://registry.npmjs.org/@types/node/-/node-18.11.3.tgz#78a6d7ec962b596fc2d2ec102c4dd3ef073fea6a"
@@ -1405,6 +1410,11 @@ minizlib@^2.1.1:
   dependencies:
     minipass "^3.0.0"
     yallist "^4.0.0"
+
+mixpanel-browser@^2.47.0:
+  version "2.47.0"
+  resolved "https://registry.npmjs.org/mixpanel-browser/-/mixpanel-browser-2.47.0.tgz#4e7fd3bb660c6f63443efbd169d1cd327db71ed4"
+  integrity sha512-Ldrva0fRBEIFWmEibBQO1PulfpJVF3pf28Guk09lDirDaSQqqU/xs9zQLwN2rL5VwVtsP1aD3JaCgaa98EjojQ==
 
 mkdirp@^0.5.1:
   version "0.5.6"

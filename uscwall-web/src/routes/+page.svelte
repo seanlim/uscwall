@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { PUBLIC_HOSTNAME } from '$env/static/public';
+	import mixpanel from 'mixpanel-browser';
+	import { PUBLIC_HOSTNAME, PUBLIC_MIXPANEL_PROJECT_TOKEN } from '$env/static/public';
 	import { goto, prefetch } from '$app/navigation';
 	import { base } from '$app/paths';
 
@@ -10,6 +11,12 @@
 	import RoutesSkeleton from '../components/RoutesSkeleton.svelte';
 	import { session } from '../stores/session';
 	import { ascents } from '../stores/ascents';
+
+	mixpanel.init(PUBLIC_MIXPANEL_PROJECT_TOKEN, {
+		track_pageview: true,
+		ignore_dnt: true,
+		persistence: 'localStorage'
+	});
 
 	let searchQuery: string = $filters.query;
 	let gradeFilter: string = $filters.grade;
