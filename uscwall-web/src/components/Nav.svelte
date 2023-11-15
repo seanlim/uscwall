@@ -57,7 +57,7 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		padding: 0.5rem;
+		padding: 0.3rem;
 		background: rgba(var(--primary-rgb), 0.7);
 		backdrop-filter: blur(5px);
 		-webkit-backdrop-filter: blur(5px);
@@ -66,11 +66,12 @@
 
 		position: sticky;
 		top: 0;
+		height: 3rem;
 	}
 
 	.logo {
-		width: 2rem;
-		height: 2rem;
+		width: 1.5rem;
+		height: 1.5rem;
 		object-fit: contain;
 		margin-right: 0.5rem;
 		border-radius: 0.3rem;
@@ -95,8 +96,8 @@
 		margin-right: 0.4rem;
 	}
 	.avatar-img {
-		width: 2rem;
-		height: 2rem;
+		width: 1.5rem;
+		height: 1.5rem;
 		border-radius: 50%;
 	}
 </style>
