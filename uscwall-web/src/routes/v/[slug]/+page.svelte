@@ -57,13 +57,13 @@
 	<div class="route">
 		<img class="image" src={route.image_url} alt={route.route_name} />
 		<button id="share-button" on:click={shareAction}>{SHARE_BUTTON_LABEL_TEXT}</button>
-		<button on:click={() => window.open(route.image_url, '_blank')}>View/Download Full Image</button
+		<button on:click={() => window.open(route?.image_url, '_blank')}
+			>View/Download Full Image</button
 		>
 		<button on:click={handleShowAscentModal}>Log Ascent...</button>
 		<AscentModal bind:showModal={showAscentModal} routeID={route.id} />
 		<div id="route-toolbar">
 			<div class="toolbar-content responsive-width">
-				<!-- <button on:click={handleGoToRoute(route.prev)} disabled={route.prev === null}>Prev.</button> -->
 				<div class="toolbar-center">
 					{route.route_name}
 					{#if userSent}
@@ -74,7 +74,6 @@
 						Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
 					</small>
 				</div>
-				<!-- <button on:click={handleGoToRoute(route.next)} disabled={route.next === null}>Next</button> -->
 			</div>
 		</div>
 	</div>

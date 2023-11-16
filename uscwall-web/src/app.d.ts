@@ -13,8 +13,6 @@ declare namespace App {
 		date_time: Date;
 		setter_id: string;
 		ascents: number;
-		next: string | null;
-		prev: string | null;
 	};
 	type Ascent = {
 		route_id: string;
