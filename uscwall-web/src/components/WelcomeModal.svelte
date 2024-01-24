@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { session } from '../stores/session';
 	import Modal from './Modal.svelte';
+	import RouteGuide from './RouteGuide.svelte';
 	export let showModal: boolean;
 
 	const handleCheckboxChanged = (e: any) => {
@@ -9,25 +10,18 @@
 </script>
 
 <Modal bind:showModal>
-	<b>👋 Welcome!</b>
+	<h3>👋 Welcome!</h3>
 	<p>
 		This site shows boulder routes for the NUS USC boulder wall. Routes displayed on this site are
-		crowdsourced and curated by <a href="https://www.nusclimb.com/">NUS Climbing</a>. The bouldering
-		wall is located at the
+		crowdsourced and curated by the <a href="https://www.nusclimb.com/">NUS Climbing Club</a>.
+	</p>
+	<h3>Where is the bouldering wall?</h3>
+	<p>
+		The bouldering wall is free to use, and is located at the
 		<a href="https://goo.gl/maps/DDyUjoycxye1q8r28"> University Sports Centre of NUS</a>.
 	</p>
-	<b>🧗‍♀️Submitting Routes</b>
-	<p>
-		To submit your own routes, report issues with the wall, or submit feedback, please use the <a
-			href="https://t.me/USCTelebot">USCTelebot</a
-		>.
-	</p>
-	<footer>
-		<small>
-			For nerds: source can be found on
-			<a href="https://github.com/seanlim/uscwall">github.com/seanlim/uscwall</a>.
-		</small>
-	</footer>
+	<h3>How do I submit Routes?</h3>
+	<RouteGuide />
 	<div class="dns-container">
 		<input
 			id="dns-checkbox"
@@ -35,7 +29,7 @@
 			checked={!$session.showWelcome}
 			on:change={handleCheckboxChanged}
 		/>
-		<label for="dns-checkbox">Don't show on launch</label>
+		<label for="dns-checkbox">Don't show this on launch anymore</label>
 	</div>
 </Modal>
 
