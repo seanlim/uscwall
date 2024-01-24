@@ -1,6 +1,7 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
-import { createGoogleSheetsClient } from '../../../apiHelpers';
+import { createGoogleSheetsClient } from '@/apiHelpers';
+import { uniq } from 'lodash';
 
 const GRADES: string[] = [
 	'⬜️ Beginner (V0-V1)',
@@ -25,23 +26,26 @@ function buildRoute(data: string[]): App.Route {
 }
 
 export const GET: RequestHandler = async ({ url }) => {
-	const IDQuery = url.searchParams.get('id');
+	const routeIDQuery = url.searchParams.get('id');
+
 	const client = await createGoogleSheetsClient();
-	const res = await client.spreadsheets.values.get({
+	const sheetsRoutes = await client.spreadsheets.values.get({
 		spreadsheetId: env.SPREADSHEET_ID,
 		range: 'vetted worksheet!A2:J'
 	});
-	const routes = res.data.values
+
+	let routes = sheetsRoutes.data.values
 		?.map(buildRoute)
 		.sort((a, b) => GRADES.indexOf(a.grade) - GRADES.indexOf(b.grade));
-	const types = routes
-		?.map((r) => r.route_type)
-		// unique
-		.filter((value, index, arr) => arr.indexOf(value) === index);
+	if (routeIDQuery != null && routeIDQuery != '') {
+		routes = routes?.filter((r) => r.id === routeIDQuery);
+	}
+
+	const types = uniq(routes?.map((r) => r.route_type));
+
 	return json({
-		routes:
-			(IDQuery != null && IDQuery != '' ? routes?.filter((r) => r.id === IDQuery) : routes) ?? [],
+		routes,
 		grades: GRADES,
-		sectors: types ?? []
+		sectors: Array.from(types?.values() ?? [])
 	});
 };

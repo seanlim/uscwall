@@ -11,6 +11,7 @@
 	import RoutesSkeleton from '../components/RoutesSkeleton.svelte';
 	import { session } from '../stores/session';
 	import { ascents } from '../stores/ascents';
+	import EmptyState from './EmptyState.svelte';
 
 	mixpanel.init(PUBLIC_MIXPANEL_PROJECT_TOKEN, {
 		track_pageview: true,
@@ -136,7 +137,7 @@
 		{:else if isError}
 			An error has occurred. Please refresh to try again.
 		{:else}
-			No routes to to display yet!
+			<EmptyState />
 		{/if}
 	{:else}
 		Showing {filteredRoutes.length} routes
@@ -160,7 +161,7 @@
 				</span>
 			</div>
 			<span class="description">
-				Set by {route.setter_name} ({route.setter_handle}) | {route.ascents} Ascents
+				{route.setter_name} ({route.setter_handle}) | {route.route_type} | {route.ascents} Ascents
 			</span>
 		</div>
 	{/each}
@@ -170,7 +171,7 @@
 	.route {
 		content-visibility: auto;
 		cursor: pointer;
-		padding: 0.3rem 0.5rem;
+		padding: 0.3rem 0.3rem;
 		border-bottom: var(--light-gray) 1px solid;
 	}
 	.route .title-row {
@@ -180,7 +181,6 @@
 	}
 	.route .title {
 		font-weight: bold;
-		font-size: 1.1rem;
 		line-height: 110%;
 		flex: 1;
 		inline-size: 150px;
@@ -188,7 +188,7 @@
 		margin-right: 10px;
 	}
 	.route .description {
-		font-size: 0.95rem;
+		font-size: 0.8rem;
 	}
 
 	.route:hover {
