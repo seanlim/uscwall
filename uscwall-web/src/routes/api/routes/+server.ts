@@ -1,7 +1,7 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { createGoogleSheetsClient } from '@/apiHelpers';
-import { uniq } from 'lodash';
+import _ from 'lodash';
 
 const GRADES: string[] = [
 	'⬜️ Beginner (V0-V1)',
@@ -41,7 +41,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		routes = routes?.filter((r) => r.id === routeIDQuery);
 	}
 
-	const types = uniq(routes?.map((r) => r.route_type));
+	const types = _.uniq(routes?.map((r) => r.route_type));
 
 	return json({
 		routes,
