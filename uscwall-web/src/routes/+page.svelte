@@ -148,21 +148,26 @@
 			on:mouseenter={() => prefetch(`${base}/v/${route.id}`)}
 			on:mouseup={() => goto(`${base}/v/${route.id}`)}
 		>
-			<div class="title-row">
-				<span class="title">
-					<a href={`${base}/v/${route.id}`}>
-						{route.route_name}
-					</a>
-					{#if $session.user != null && $ascents.ascents.map((a) => a.route_id).includes(route.id)}
-						{' '} ✅{/if}
-				</span>
-				<span class={`tag ${resolveTag(route.grade)}`}>
-					{route.grade}
+			<img class="thumbnail" src={route.image_url} alt="route" width="50" height="50" />
+			<div class="content">
+				<div class="title-row">
+					<span class="title">
+						<a href={`${base}/v/${route.id}`}>
+							{route.route_name}
+						</a>
+						{#if $session.user != null && $ascents.ascents
+								.map((a) => a.route_id)
+								.includes(route.id)}
+							{' '} ✅{/if}
+					</span>
+					<span class={`tag ${resolveTag(route.grade)}`}>
+						{route.grade}
+					</span>
+				</div>
+				<span class="description">
+					Set by {route.setter_name ?? 'unknown'} | {route.route_type}
 				</span>
 			</div>
-			<span class="description">
-				{route.setter_name} ({route.setter_handle}) | {route.route_type} | {route.ascents} Ascents
-			</span>
 		</div>
 	{/each}
 </div>
@@ -171,8 +176,14 @@
 	.route {
 		content-visibility: auto;
 		cursor: pointer;
-		padding: 0.3rem 0.3rem;
+		padding: 0.6rem 0.3rem;
 		border-bottom: var(--light-gray) 1px solid;
+		display: flex;
+		flex-direction: row;
+	}
+	.route .content {
+		margin-left: 0.5rem;
+		flex: 1;
 	}
 	.route .title-row {
 		display: flex;
@@ -188,7 +199,13 @@
 		margin-right: 10px;
 	}
 	.route .description {
-		font-size: 0.8rem;
+		font-size: 0.7rem;
+	}
+
+	.route .thumbnail {
+		width: 50px;
+		height: 50px;
+		object-fit: cover;
 	}
 
 	.route:hover {

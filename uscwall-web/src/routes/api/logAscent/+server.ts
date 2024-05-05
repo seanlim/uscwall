@@ -30,11 +30,11 @@ export const GET: RequestHandler = async ({ url }) => {
 		return json({ ok: false });
 	}
 
-	//check if route exists
+	// check if route exists
 	const client = await createGoogleSheetsClient();
 	const res = await client.spreadsheets.values.get({
 		spreadsheetId: env.SPREADSHEET_ID,
-		range: 'vetted worksheet!A2:J'
+		range: 'submissions!A2:J'
 	});
 	const routes = res.data.values?.map(buildRoute);
 	if (routes == null) {
