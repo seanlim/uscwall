@@ -10,17 +10,17 @@
 </script>
 
 <Modal bind:showModal>
-	<h3>👋 Welcome!</h3>
+	<strong>Welcome!</strong>
 	<p>
-		This site shows boulder routes for the NUS USC boulder wall. Routes displayed on this site are
-		crowdsourced and curated by the <a href="https://www.nusclimb.com/">NUS Climbing Club</a>.
+		This website is a simple directory of crowd-sourced routes at the NUS USC bouldering wall. The
+		website and Telegram bot is <a href="https://github.com/seanlim/uscwall">open-sourced</a> and
+		running with support from the
+		<a href="https://www.nusclimb.com/">NUS Climbing Club</a>.
 	</p>
 	<h3>Where is the bouldering wall?</h3>
 	<p>
-		The bouldering wall is free to use, and is located at the
 		<a href="https://goo.gl/maps/DDyUjoycxye1q8r28"> University Sports Centre of NUS</a>.
 	</p>
-	<h3>How do I submit Routes?</h3>
 	<RouteGuide />
 	<div class="dns-container">
 		<input

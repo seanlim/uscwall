@@ -1,6 +1,5 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
-import { debug } from '../helpers';
 
 const FILTERS_LOCALSTORAGE_KEY = 'filters';
 type Filters = {
@@ -19,7 +18,7 @@ function getFiltersFromLocalStorage(): Filters {
 			localStorage.getItem(FILTERS_LOCALSTORAGE_KEY) ?? JSON.stringify(defaultFilters)
 		);
 	}
-	return defaultFilters;
+	return { ...defaultFilters };
 }
 function createFiltersStore() {
 	const filters = getFiltersFromLocalStorage();
@@ -30,7 +29,6 @@ function createFiltersStore() {
 			if (browser) {
 				localStorage.setItem(FILTERS_LOCALSTORAGE_KEY, JSON.stringify(value));
 			}
-			debug(`setting filters ${JSON.stringify(value, null, 2)}`);
 			set(value);
 		},
 		update: (key: keyof Filters, value: string) =>
@@ -42,7 +40,6 @@ function createFiltersStore() {
 				if (browser) {
 					localStorage.setItem(FILTERS_LOCALSTORAGE_KEY, JSON.stringify(n));
 				}
-				debug(`updating ${JSON.stringify(n, null, 2)}`);
 				return n;
 			}),
 		reset: () =>
@@ -50,7 +47,7 @@ function createFiltersStore() {
 				if (browser) {
 					localStorage.setItem(FILTERS_LOCALSTORAGE_KEY, JSON.stringify(defaultFilters));
 				}
-				return defaultFilters;
+				return { ...defaultFilters };
 			})
 	};
 }

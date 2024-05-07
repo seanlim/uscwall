@@ -96,7 +96,7 @@
 		border-radius: 5px;
 		padding: 0.5rem;
 		font-weight: bold;
-		font-size: 0.8rem;
+		font-size: 0.7rem;
 	}
 
 	.tag.is-easy {
@@ -162,7 +162,6 @@
 
 	input[type='text'] {
 		padding: 0.5rem 0.4rem;
-		border: solid 1px var(--light-gray);
 		outline: none;
 	}
 </style>

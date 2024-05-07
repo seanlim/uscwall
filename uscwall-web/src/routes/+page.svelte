@@ -4,14 +4,15 @@
 	import { goto, prefetch } from '$app/navigation';
 	import { base } from '$app/paths';
 
-	import { resolveTag } from '../helpers';
-	import { filters } from '../stores/filters';
-	import { routes } from '../stores/routes';
+	import { resolveTag } from '@/helpers';
+	import { filters } from '@stores/filters';
+	import { routes } from '@stores/routes';
 	import { onMount } from 'svelte';
-	import RoutesSkeleton from '../components/RoutesSkeleton.svelte';
-	import { session } from '../stores/session';
-	import { ascents } from '../stores/ascents';
+	import RoutesSkeleton from '@components/RoutesSkeleton.svelte';
+	import { session } from '@stores/session';
+	import { ascents } from '@stores/ascents';
 	import EmptyState from './EmptyState.svelte';
+	import RouteGuide from '@/components/RouteGuide.svelte';
 
 	mixpanel.init(PUBLIC_MIXPANEL_PROJECT_TOKEN, {
 		track_pageview: true,
@@ -19,31 +20,27 @@
 		persistence: 'localStorage'
 	});
 
-	let searchQuery: string = $filters.query;
-	let gradeFilter: string = $filters.grade;
-	let sectorFilter: string = $filters.sector;
 	let hideSent: boolean = false;
 
 	let isLoading = false;
 	let isError = false;
 
 	$: filteredRoutes =
-		// TODO: manage this better
 		$routes.routes?.filter((route) => {
 			let r = false;
 			if (
-				route.route_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				route.setter_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				route.setter_handle.toLowerCase().includes(searchQuery.toLowerCase())
+				route.route_name.toLowerCase().includes($filters.query.toLowerCase()) ||
+				route.setter_name.toLowerCase().includes($filters.query.toLowerCase()) ||
+				route.setter_handle.toLowerCase().includes($filters.query.toLowerCase())
 			) {
 				r = true;
 			}
-			let g = gradeFilter == '*';
-			if (gradeFilter !== '*' && route.grade == gradeFilter) {
+			let g = $filters.grade == '*';
+			if ($filters.grade !== '*' && route.grade == $filters.grade) {
 				g = true;
 			}
-			let s = sectorFilter == '*';
-			if (sectorFilter !== '*' && route.route_type == sectorFilter) {
+			let s = $filters.sector == '*';
+			if ($filters.sector !== '*' && route.route_type == $filters.sector) {
 				s = true;
 			}
 			if (
@@ -58,7 +55,6 @@
 
 	function reset() {
 		filters.reset();
-		location.reload();
 	}
 
 	async function fetchRoutes() {
@@ -95,13 +91,13 @@
 		class="input"
 		type="text"
 		placeholder="Search route or setter name..."
-		bind:value={searchQuery}
-		on:change={() => filters.update('query', searchQuery)}
+		bind:value={$filters.query}
+		on:change={(e) => filters.update('query', e.target.value)}
 	/>
 	<select
-		bind:value={gradeFilter}
-		on:change={() => {
-			filters.update('grade', gradeFilter);
+		bind:value={$filters.grade}
+		on:change={(e) => {
+			filters.update('grade', e.target.value);
 		}}
 	>
 		<option value="*" selected>All grades</option>
@@ -110,9 +106,9 @@
 		{/each}
 	</select>
 	<select
-		bind:value={sectorFilter}
-		on:change={() => {
-			filters.update('sector', sectorFilter);
+		bind:value={$filters.sector}
+		on:change={(e) => {
+			filters.update('sector', e.target.value);
 		}}
 	>
 		<option value="*" selected>All Sectors</option>
@@ -170,6 +166,7 @@
 			</div>
 		</div>
 	{/each}
+	<RouteGuide />
 </div>
 
 <style>

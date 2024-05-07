@@ -1,10 +1,5 @@
-<script>
-	import RouteGuide from '@/components/RouteGuide.svelte';
-</script>
-
 <div class="c">
-	<h3>No routes to show yet!</h3>
-	<RouteGuide />
+	<h3>No routes to show</h3>
 </div>
 
 <style>
