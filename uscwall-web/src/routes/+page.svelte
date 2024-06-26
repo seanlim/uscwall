@@ -50,6 +50,7 @@
 		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
 		const data = await res.json();
 		isLoading = false;
+		window.Telegram.WebApp.expand();
 		if (res.ok) {
 			isError = false;
 			routes.update(data);
@@ -61,6 +62,7 @@
 	}
 
 	onMount(() => {
+		window.Telegram.WebApp.ready();
 		fetchRoutes();
 	});
 </script>
