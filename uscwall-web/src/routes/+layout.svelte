@@ -1,9 +1,4 @@
-<script>
-	import Nav from '../components/Nav.svelte';
-</script>
-
 <div class="container responsive-width">
-	<Nav />
 	<slot />
 </div>
 
@@ -145,7 +140,7 @@
 
 	button {
 		padding: 0.5rem 0.4rem;
-		border-radius: 10px;
+		border-radius: 5px;
 		outline: none;
 		border: none;
 		background: var(--secondary);
