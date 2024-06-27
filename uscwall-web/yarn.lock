@@ -188,6 +188,11 @@
     magic-string "^0.26.5"
     svelte-hmr "^0.15.0"
 
+"@tma.js/sdk@^2.5.1":
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/@tma.js/sdk/-/sdk-2.5.1.tgz#36c7b06f05a858476fb25ac7861a421f5fb907ea"
+  integrity sha512-uUFv3oINGRwkh4KbGxMq9OxDdSQOhH9O45i9i0aqen6pIakeiIxxzrF8Yhv2xSFWrn8V+gaOpr3IDrushlo5TA==
+
 "@types/cookie@^0.5.1":
   version "0.5.1"
   resolved "https://registry.npmjs.org/@types/cookie/-/cookie-0.5.1.tgz#b29aa1f91a59f35e29ff8f7cb24faf1a3a750554"
