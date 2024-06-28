@@ -10,6 +10,8 @@
 	import { onMount } from 'svelte';
 	import RoutesSkeleton from '@components/RoutesSkeleton.svelte';
 	import EmptyState from './EmptyState.svelte';
+	import { isTMA as checkTMA } from '@tma.js/sdk';
+	import { env } from '$env/dynamic/public';
 
 	mixpanel.init(PUBLIC_MIXPANEL_PROJECT_TOKEN, {
 		track_pageview: true,
@@ -61,7 +63,11 @@
 		}
 	}
 
-	onMount(() => {
+	onMount(async () => {
+		const isTMA = await checkTMA();
+		if (!isTMA && import.meta.env.PROD) {
+			goto('https://t.me/USCTelebot');
+		}
 		window.Telegram.WebApp.ready();
 		fetchRoutes();
 	});

@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { PUBLIC_HOSTNAME } from '$env/static/public';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	import { resolveTag } from '@/helpers';
 	import { routes } from '@/stores/routes';
 	import { goto } from '$app/navigation';
+	import { initBackButton, isTMA, on, type RemoveEventListenerFn } from '@tma.js/sdk';
 
 	let routeID = $page.params.slug;
 	$: route = $routes.routes?.find((r) => r.id == routeID);
+	let removeListener: RemoveEventListenerFn;
 
 	async function fetchRoutes() {
 		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
@@ -20,21 +22,32 @@
 		}
 	}
 
-	onMount(() => {
+	function navigateBack() {
+		history.length === 1 ? goto('/') : history.back();
+	}
+
+	onMount(async () => {
 		fetchRoutes();
+		if (await isTMA()) {
+			const [backButton] = initBackButton();
+			backButton.show();
+			removeListener = on('back_button_pressed', navigateBack);
+		}
 	});
+
+	onDestroy(() => removeListener && removeListener());
 </script>
 
 {#if route != null}
 	<div class="container">
-		<button
+		<!-- <button
 			on:click={() => {
 				// history.length will always be at least 1
 				history.length === 1 ? goto('/') : history.back();
 			}}
 		>
 			&larr; Back to routes</button
-		>
+		> -->
 		<p>
 			{route.route_name}
 			<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
