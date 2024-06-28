@@ -6,11 +6,12 @@
 	import { resolveTag } from '@/helpers';
 	import { routes } from '@/stores/routes';
 	import { goto } from '$app/navigation';
-	import { initBackButton, isTMA, on, type RemoveEventListenerFn } from '@tma.js/sdk';
+	import { BackButton, initBackButton, isTMA, on, type RemoveEventListenerFn } from '@tma.js/sdk';
 
 	let routeID = $page.params.slug;
 	$: route = $routes.routes?.find((r) => r.id == routeID);
 	let removeListener: RemoveEventListenerFn;
+	let backButton: BackButton;
 
 	async function fetchRoutes() {
 		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
@@ -29,13 +30,19 @@
 	onMount(async () => {
 		fetchRoutes();
 		if (await isTMA()) {
-			const [backButton] = initBackButton();
-			backButton.show();
+			const [bb] = initBackButton();
+			bb.show();
 			removeListener = on('back_button_pressed', navigateBack);
+			backButton = bb;
 		}
 	});
 
-	onDestroy(() => removeListener && removeListener());
+	onDestroy(() => {
+		if (removeListener) {
+			removeListener();
+			backButton.hide();
+		}
+	});
 </script>
 
 {#if route != null}
