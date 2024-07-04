@@ -1,9 +1,9 @@
 export const WELCOME_MESSAGE = `
 *Welcome to the USCTelebot\\!*
 
-To see climbing routes\\, please visit [uscwall\\.sean\\.place](https://uscwall.sean.place)\\.
+To see climbing routes\\, please launch the [Route Explorer](https://t.me/USCTelebot/uscwall)\\.
 
-*Commands\\:* 
+*Commands\\:*
 \\- /submit to submit a route\\.
 \\- /report to report issues with the boulder wall\\.
 \\- /feedback to submit feedback\\.
