@@ -7,12 +7,12 @@ import {
   uploadHandler,
 } from "./handlers";
 import { USCBotContext } from "../..";
-import Messages from "~/messages";
+import messages from "~/messages";
 
 const submitRouteScene = new Scenes.WizardScene<USCBotContext>(
   "submit",
   async (ctx) => {
-    await ctx.reply(Messages.Submit, { parse_mode: "MarkdownV2" });
+    await ctx.reply(messages.submit.instructions, { parse_mode: "MarkdownV2" });
     return ctx.wizard.next();
   },
   uploadHandler,
@@ -23,7 +23,7 @@ const submitRouteScene = new Scenes.WizardScene<USCBotContext>(
 );
 
 submitRouteScene.leave(async (ctx) =>
-  ctx.reply(Messages.Welcome, { parse_mode: "MarkdownV2" })
+  ctx.reply(messages.welcomeInstructions, { parse_mode: "MarkdownV2" })
 );
 submitRouteScene.command("cancel", async (ctx) => {
   return ctx.scene.leave();

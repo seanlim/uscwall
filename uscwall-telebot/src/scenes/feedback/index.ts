@@ -17,7 +17,7 @@ const feedbackScene = new Scenes.WizardScene<USCBotContext>(
 );
 
 feedbackScene.leave(async (ctx) =>
-  ctx.reply(Messages.Welcome, { parse_mode: "MarkdownV2" })
+  ctx.reply(Messages.welcomeInstructions, { parse_mode: "MarkdownV2" })
 );
 feedbackScene.command("cancel", async (ctx) => {
   return ctx.scene.leave();

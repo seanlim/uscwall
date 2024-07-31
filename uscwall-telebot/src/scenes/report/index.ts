@@ -1,11 +1,11 @@
 import { Scenes } from "telegraf";
 import { USCBotContext } from "../..";
-import { WELCOME_MESSAGE } from "../../constants";
 import {
   reportDescriptionHandler,
   reportImageHandler,
   reportSectorHandler,
 } from "./handlers";
+import messages from "~/messages";
 
 const reportScene = new Scenes.WizardScene<USCBotContext>(
   "report",
@@ -22,7 +22,7 @@ const reportScene = new Scenes.WizardScene<USCBotContext>(
 );
 
 reportScene.leave(async (ctx) =>
-  ctx.reply(WELCOME_MESSAGE, { parse_mode: "MarkdownV2" })
+  ctx.reply(messages.welcomeInstructions, { parse_mode: "MarkdownV2" })
 );
 reportScene.command("cancel", async (ctx) => {
   return ctx.scene.leave();

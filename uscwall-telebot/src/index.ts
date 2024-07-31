@@ -4,7 +4,7 @@ import * as Dotenv from "dotenv";
 import submitRouteScene from "./scenes/submitRoute";
 import reportScene from "./scenes/report";
 import feedbackScene from "./scenes/feedback";
-import messages from "./messages";
+import messages from "~/messages";
 
 Dotenv.config();
 

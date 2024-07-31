@@ -1,6 +1,6 @@
 const ROUTE_EXPLORER_URL = "https://t.me/USCTelebot/uscwall";
 
-export default {
+const messages = {
   welcomeInstructions: `
 *Welcome to the USC Telegram Bot\\!*
 
@@ -33,3 +33,5 @@ You can use /cancel to cancel your submission at any point\\.
     instructions: `*Submit Feedback*\nTo cancel your submission\\, use /cancel\\.\nPlease send your feedback in one message\\:`,
   },
 };
+
+export default messages;
