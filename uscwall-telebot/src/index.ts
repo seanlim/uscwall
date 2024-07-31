@@ -1,10 +1,10 @@
 import Express from "express";
 import { Context, Scenes, Telegraf, session } from "telegraf";
 import * as Dotenv from "dotenv";
-import { WELCOME_MESSAGE } from "./constants";
 import submitRouteScene from "./scenes/submitRoute";
 import reportScene from "./scenes/report";
 import feedbackScene from "./scenes/feedback";
+import messages from "./messages";
 
 Dotenv.config();
 
@@ -44,7 +44,7 @@ bot.command("quit", async (ctx) => {
   await ctx.leaveChat();
 });
 bot.start(async (ctx) => {
-  await ctx.reply(WELCOME_MESSAGE, {
+  await ctx.reply(messages.welcomeInstructions, {
     parse_mode: "MarkdownV2",
   });
 });
