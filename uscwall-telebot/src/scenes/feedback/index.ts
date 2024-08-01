@@ -1,7 +1,7 @@
 import { Scenes } from "telegraf";
 import { USCBotContext } from "../..";
-import { WELCOME_MESSAGE } from "../../constants";
 import { feedbackHandler, feedbackSubmitHandler } from "./handlers";
+import Messages from "~/messages";
 
 const feedbackScene = new Scenes.WizardScene<USCBotContext>(
   "feedback",
@@ -17,7 +17,7 @@ const feedbackScene = new Scenes.WizardScene<USCBotContext>(
 );
 
 feedbackScene.leave(async (ctx) =>
-  ctx.reply(WELCOME_MESSAGE, { parse_mode: "MarkdownV2" })
+  ctx.reply(Messages.welcomeInstructions, { parse_mode: "MarkdownV2" })
 );
 feedbackScene.command("cancel", async (ctx) => {
   return ctx.scene.leave();

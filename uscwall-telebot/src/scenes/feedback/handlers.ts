@@ -4,6 +4,7 @@ import { message } from "telegraf/filters";
 import { insertIntoSheet } from "../../helpers";
 import { WORKSHEET_FEEDBACKS } from "../../constants";
 import { randomUUID } from "crypto";
+import messages from "~/messages";
 
 export const feedbackHandler = new Composer<USCBotContext>();
 feedbackHandler.on(message("text"), async (ctx) => {
@@ -40,10 +41,9 @@ feedbackSubmitHandler.action("confirm", async (ctx) => {
     ]);
   } catch (err) {
     console.error(err);
-    await ctx.reply("Apologies, something went wrong.");
-    await ctx.reply(
-      "We are working to solve this issue, in the meantime feel free to try again."
-    );
+    messages.error.internalError.forEach(async (message) => {
+      await ctx.reply(message);
+    });
     return ctx.scene.leave();
   }
   await ctx.reply("Done! Thank you for your feedback!");

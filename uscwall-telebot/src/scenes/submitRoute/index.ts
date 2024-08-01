@@ -1,5 +1,4 @@
 import { Scenes } from "telegraf";
-import { SUBMIT_MESSAGE, WELCOME_MESSAGE } from "../../constants";
 import {
   gradeHandler,
   nameHandler,
@@ -8,11 +7,12 @@ import {
   uploadHandler,
 } from "./handlers";
 import { USCBotContext } from "../..";
+import messages from "~/messages";
 
 const submitRouteScene = new Scenes.WizardScene<USCBotContext>(
   "submit",
   async (ctx) => {
-    await ctx.reply(SUBMIT_MESSAGE, { parse_mode: "MarkdownV2" });
+    await ctx.reply(messages.submit.instructions, { parse_mode: "MarkdownV2" });
     return ctx.wizard.next();
   },
   uploadHandler,
@@ -23,7 +23,7 @@ const submitRouteScene = new Scenes.WizardScene<USCBotContext>(
 );
 
 submitRouteScene.leave(async (ctx) =>
-  ctx.reply(WELCOME_MESSAGE, { parse_mode: "MarkdownV2" })
+  ctx.reply(messages.welcomeInstructions, { parse_mode: "MarkdownV2" })
 );
 submitRouteScene.command("cancel", async (ctx) => {
   return ctx.scene.leave();

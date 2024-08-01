@@ -15,6 +15,7 @@ import {
   insertIntoSheet,
   uploadFileToImgBB,
 } from "../../helpers";
+import messages from "~/messages";
 
 export const uploadHandler = new Composer<USCBotContext>();
 uploadHandler.on(message("text"), async (ctx) => {
@@ -28,7 +29,6 @@ uploadHandler.on(message("document"), async (ctx) => {
 uploadHandler.on(message("photo"), async (ctx) => {
   const l = ctx.update.message.photo.length;
   if (l < 1) {
-    console.error("no images");
     return ctx.scene.reenter();
   }
   ctx.scene.session.telegramFileID = ctx.update.message.photo[l - 1].file_id;
@@ -41,7 +41,6 @@ uploadHandler.on(message("photo"), async (ctx) => {
 
 export const gradeHandler = new Composer<USCBotContext>();
 gradeHandler.on(message("text"), async (ctx) => {
-  console.info("Handling grade...");
   if (!Object.values(Grades).includes(ctx.message.text)) {
     await ctx.reply(
       "Invalid input, please use inputs provided",
@@ -56,7 +55,6 @@ gradeHandler.on(message("text"), async (ctx) => {
 
 export const nameHandler = new Composer<USCBotContext>();
 nameHandler.on(message("text"), async (ctx) => {
-  console.info("Handling name...");
   ctx.scene.session.routeName = ctx.message.text;
   await ctx.reply(
     "Which sector is this route at?",
@@ -67,10 +65,9 @@ nameHandler.on(message("text"), async (ctx) => {
 
 export const sectorHandler = new Composer<USCBotContext>();
 sectorHandler.on(message("text"), async (ctx) => {
-  console.info("Handling sector...");
   if (!Object.values(Sectors).includes(ctx.message.text)) {
     await ctx.reply(
-      "Invalid input, please use inputs provided",
+      messages.invalid.useInputsProvided,
       Markup.keyboard(SECTORS_BUTTONS).oneTime()
     );
     return ctx.wizard.state;
@@ -88,26 +85,27 @@ sectorHandler.on(message("text"), async (ctx) => {
 
 export const submissionHandler = new Composer<USCBotContext>();
 submissionHandler.action("cancel", async (ctx) => {
-  console.debug("Cancelled");
   await ctx.reply("Cancelled submission");
   return ctx.scene.leave();
 });
 submissionHandler.action("confirm", async (ctx) => {
-  console.info("Handling submission...");
   const {
     routeGrade,
     routeName,
     routeSector,
     telegramFileID: fileID,
   } = ctx.scene.session;
-  console.debug(`Submitting with fileID ${fileID}`);
-  await ctx.reply("Finalising submission...");
+  await ctx.reply("Finalising your submission...");
 
   // Obtain image from URL
   const path = await getTelegramFilePath(fileID);
   const imgURL = `https://api.telegram.org/file/bot${process.env.TELEGRAM_TOKEN}/${path}`;
 
   await ctx.reply("Uploading image...");
+
+  await ctx.reply(
+    "Your route will be vetted by the team before it is made public, do allow a few days for this process."
+  );
 
   // Upload
   try {
@@ -130,18 +128,13 @@ submissionHandler.action("confirm", async (ctx) => {
     ]);
   } catch (err) {
     console.error(err);
-    await ctx.reply("Apologies, your upload has failed.");
-    await ctx.reply(
-      "We are working to solve this issue, in the meantime feel free to try again."
-    );
+    messages.error.internalError.forEach(async (m) => {
+      await ctx.reply(m);
+    });
     return ctx.scene.leave();
   }
 
-  console.log("Cells Appended");
-
-  await ctx.reply(
-    "Done! Your route should appear once we are done vetting it!"
-  );
+  await ctx.reply("Done!");
 
   return ctx.scene.leave();
 });
