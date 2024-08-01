@@ -10,10 +10,7 @@ import messages from "~/messages";
 const reportScene = new Scenes.WizardScene<USCBotContext>(
   "report",
   async (ctx) => {
-    await ctx.reply(
-      `*Report Issue*\nTo cancel your report\\, use /cancel\\.\nPlease give a detailed description of the issue\\:`,
-      { parse_mode: "MarkdownV2" }
-    );
+    await ctx.reply(messages.report.instructions, { parse_mode: "MarkdownV2" });
     return ctx.wizard.next();
   },
   reportDescriptionHandler,

@@ -32,6 +32,19 @@ You can use /cancel to cancel your submission at any point\\.
   feedback: {
     instructions: `*Submit Feedback*\nTo cancel your submission\\, use /cancel\\.\nPlease send your feedback in one message\\:`,
   },
+  report: {
+    instructions: `*Report Issue*\nTo cancel your report\\, use /cancel\\.\nPlease give a detailed description of the issue\\:`,
+  },
+  invalid: {
+    useInputsProvided: `Invalid input, please use inputs provided`,
+    uploadImage: `Invalid file, please send an image file.`,
+  },
+  error: {
+    internalError: [
+      `Apologies, something appears to have went wrong.`,
+      `We are working to resolve the issue, in the meantime feel free to try again!`,
+    ],
+  },
 };
 
 export default messages;

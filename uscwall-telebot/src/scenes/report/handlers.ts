@@ -9,6 +9,7 @@ import {
   uploadFileToImgBB,
 } from "../../helpers";
 import { randomUUID } from "crypto";
+import messages from "~/messages";
 
 export const reportDescriptionHandler = new Composer<USCBotContext>();
 reportDescriptionHandler.on(message("text"), async (ctx) => {
@@ -24,7 +25,7 @@ export const reportSectorHandler = new Composer<USCBotContext>();
 reportSectorHandler.on(message("text"), async (ctx) => {
   if (!Object.values(Sectors).includes(ctx.message.text)) {
     await ctx.reply(
-      "Invalid input, please use inputs provided",
+      messages.invalid.useInputsProvided,
       Markup.keyboard(SECTORS_BUTTONS).oneTime()
     );
     return ctx.wizard.state;
@@ -58,11 +59,11 @@ reportImageHandler.action("skip", async (ctx) => {
   return ctx.scene.leave();
 });
 reportImageHandler.on(message("text"), async (ctx) => {
-  await ctx.reply("Please send an image.");
+  await ctx.reply(messages.invalid.uploadImage);
   return ctx.wizard.state;
 });
 reportImageHandler.on(message("document"), async (ctx) => {
-  await ctx.reply("Please send an image.");
+  await ctx.reply(messages.invalid.uploadImage);
   return ctx.wizard.state;
 });
 reportImageHandler.on(message("photo"), async (ctx) => {
