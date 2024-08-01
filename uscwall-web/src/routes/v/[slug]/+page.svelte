@@ -55,11 +55,11 @@
 		>
 			&larr; Back to routes</button
 		> -->
-		<p>
+		<h3>
 			{route.route_name}
-			<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
-		</p>
+		</h3>
 		<img class="image" src={route.image_url} alt={route.route_name} />
+		<span class={`tag ${resolveTag(route.grade)}`}>{route.grade}</span>
 		<small>
 			Set by {route.setter_name} (@{route.setter_handle})
 		</small>

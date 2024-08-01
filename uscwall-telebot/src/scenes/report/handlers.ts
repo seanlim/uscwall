@@ -71,7 +71,6 @@ reportImageHandler.on(message("photo"), async (ctx) => {
 
   const l = ctx.update.message.photo.length;
   if (l < 1) {
-    console.error("no images");
     return ctx.scene.reenter();
   }
   const fileID = ctx.update.message.photo[l - 1].file_id;
@@ -102,7 +101,6 @@ reportImageHandler.on(message("photo"), async (ctx) => {
       "NEW",
     ],
   ]);
-  console.log("Cells Appended");
 
   return ctx.scene.leave();
 });

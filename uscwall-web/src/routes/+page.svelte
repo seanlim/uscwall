@@ -99,7 +99,6 @@
 		}}
 	>
 		<option value="*" selected>All Sectors</option>
-		<!-- TODO: manage this better -->
 		{#each $routes.sectors ?? [] as sector}
 			<option value={sector}>{sector}</option>
 		{/each}
@@ -149,8 +148,8 @@
 	.route {
 		content-visibility: auto;
 		cursor: pointer;
-		padding: 0.6rem 0.3rem;
-		border-bottom: var(--light-gray) 1px solid;
+		padding: 5px 5px 8px 5px;
+		border-bottom: var(--light-gray) 1.3px solid;
 		display: flex;
 		flex-direction: row;
 	}
@@ -176,9 +175,10 @@
 	}
 
 	.route .thumbnail {
-		width: 50px;
-		height: 50px;
+		width: 3rem;
+		height: 3rem;
 		object-fit: cover;
+		background: var(--light-gray);
 	}
 
 	.route:hover {
@@ -191,13 +191,13 @@
 	.filters-container {
 		display: flex;
 		flex-direction: column;
-		padding: 0.3rem;
+		padding: 5px;
 	}
 	.filters-container > * {
-		margin-bottom: 10px;
+		margin-bottom: 0.5rem;
 	}
 	.routes-container {
-		padding: 0 0.5rem;
+		padding: 0 0 5px 0;
 		margin-bottom: 1rem;
 	}
 </style>

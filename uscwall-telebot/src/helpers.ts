@@ -5,7 +5,6 @@ import { WORKSHEET_TEST } from "./constants";
 
 export async function uploadFileToImgBB(imageURL: string): Promise<string> {
   const form = new FormData();
-  console.info(imageURL);
   form.append("key", process.env.IMGBB_TOKEN);
   form.append("image", imageURL);
   form.append("name", "");
