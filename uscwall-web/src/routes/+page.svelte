@@ -1,17 +1,18 @@
 <script lang="ts">
 	import mixpanel from 'mixpanel-browser';
 	import { PUBLIC_HOSTNAME, PUBLIC_MIXPANEL_PROJECT_TOKEN } from '$env/static/public';
-	import { goto, prefetch } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 
 	import { resolveTag } from '@/helpers';
 	import { filters } from '@stores/filters';
 	import { routes } from '@stores/routes';
-	import { onMount } from 'svelte';
+	import { afterUpdate, onMount } from 'svelte';
 	import RoutesSkeleton from '@components/RoutesSkeleton.svelte';
 	import EmptyState from './EmptyState.svelte';
 	import { isTMA as checkTMA } from '@tma.js/sdk';
-	import { env } from '$env/dynamic/public';
+	import Filters from '@/components/Filters.svelte';
+	import type { Snapshot } from '@sveltejs/kit';
 
 	mixpanel.init(PUBLIC_MIXPANEL_PROJECT_TOKEN, {
 		track_pageview: true,
@@ -21,6 +22,17 @@
 
 	let isLoading = false;
 	let isError = false;
+	let scrollY = 0;
+	let containerRef: HTMLDivElement;
+
+	export const snapshot: Snapshot<number> = {
+		capture: () =>  scrollY,
+		restore: (scrollValue: number) => scrollY = scrollValue,
+	};
+
+	afterUpdate(() => {
+		containerRef.scrollTo({ top: scrollY, behavior: 'smooth' });
+	})
 
 	$: filteredRoutes =
 		$routes.routes?.filter((route) => {
@@ -43,15 +55,15 @@
 			return r && g && s;
 		}) ?? [];
 
-	function reset() {
-		filters.reset();
-	}
+		function didScroll (e: UIEvent) {
+			scrollY= e.target.scrollTop;
+		}
 
 	async function fetchRoutes() {
-		isLoading = true;
+		// isLoading = true;
 		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
 		const data = await res.json();
-		isLoading = false;
+		// isLoading = false;
 		window.Telegram.WebApp.expand();
 		if (res.ok) {
 			isError = false;
@@ -73,78 +85,53 @@
 	});
 </script>
 
-<div class="filters-container">
-	<input
-		class="input"
-		type="text"
-		placeholder="Search route or setter name..."
-		bind:value={$filters.query}
-		on:change={(e) => filters.update('query', e.target.value)}
-	/>
-	<select
-		bind:value={$filters.grade}
-		on:change={(e) => {
-			filters.update('grade', e.target.value);
-		}}
-	>
-		<option value="*" selected>All grades</option>
-		{#each $routes.grades as grade}
-			<option value={grade}>{grade}</option>
-		{/each}
-	</select>
-	<select
-		bind:value={$filters.sector}
-		on:change={(e) => {
-			filters.update('sector', e.target.value);
-		}}
-	>
-		<option value="*" selected>All Sectors</option>
-		{#each $routes.sectors ?? [] as sector}
-			<option value={sector}>{sector}</option>
-		{/each}
-	</select>
-	<button class="button" on:click={reset}>Reset filters</button>
-</div>
-<hr />
-<div class="routes-container">
-	{#if filteredRoutes.length < 1}
-		{#if isLoading}
-			<RoutesSkeleton />
-		{:else if isError}
-			An error has occurred. Please refresh to try again.
+<div class="cont" on:scroll={didScroll} bind:this={containerRef}>
+	<Filters />
+	<div class="routes-container">
+		{#if filteredRoutes.length < 1}
+			{#if isLoading}
+				<RoutesSkeleton />
+			{:else if isError}
+				An error has occurred. Please refresh to try again.
+			{:else}
+				<EmptyState />
+			{/if}
 		{:else}
-			<EmptyState />
+			Showing {filteredRoutes.length} routes
 		{/if}
-	{:else}
-		Showing {filteredRoutes.length} routes
-	{/if}
-	{#each filteredRoutes as route}
-		<div
-			class="route"
-			on:mouseenter={() => prefetch(`${base}/v/${route.id}`)}
-			on:mouseup={() => goto(`${base}/v/${route.id}`)}
-		>
-			<img class="thumbnail" src={route.image_url} alt="route" width="50" height="50" />
-			<div class="content">
-				<div class="title-row">
-					<span class="title">
-						<a href={`${base}/v/${route.id}`}>
-							{route.route_name}
-						</a>
-					</span>
-					<span class={`tag ${resolveTag(route.grade)}`}>
-						{route.grade}
+		{#each filteredRoutes as route}
+			<div
+				class="route"
+				on:mouseup={() => goto(`${base}/v/${route.id}`)}
+			>
+				<img class="thumbnail" src={route.image_url} alt="route" width="50" height="50" />
+				<div class="content">
+					<div class="title-row">
+						<span class="title">
+							<a href={`${base}/v/${route.id}`}>
+								{route.route_name}
+							</a>
+						</span>
+						<span class={`tag ${resolveTag(route.grade)}`}>
+							{route.grade}
+						</span>
+					</div>
+					<span class="description">
+						Set by {route.setter_name ?? 'unknown'} | {route.route_type}
 					</span>
 				</div>
-				<span class="description">
-					Set by {route.setter_name ?? 'unknown'} | {route.route_type}
-				</span>
 			</div>
-		</div>
-	{/each}
+		{/each}
+	</div>
 </div>
 
 <style>
+	.cont {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		overflow-y: scroll;
+	}
 	.route {
 		content-visibility: auto;
 		cursor: pointer;
@@ -188,16 +175,9 @@
 		outline: auto;
 	}
 
-	.filters-container {
-		display: flex;
-		flex-direction: column;
-		padding: 5px;
-	}
-	.filters-container > * {
-		margin-bottom: 0.5rem;
-	}
 	.routes-container {
 		padding: 0 0 5px 0;
 		margin-bottom: 1rem;
+		flex: 1;
 	}
 </style>

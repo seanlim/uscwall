@@ -36,9 +36,7 @@
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
 			'Cantarell', 'Fira Sans', 'Droid Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light',
 			'Helvetica Neue', Helvetica, Arial, sans-serif;
-		text-rendering: geometricPrecision;
 		line-height: auto;
-		-webkit-font-smoothing: antialiased;
 
 		background-color: var(--light-gray);
 		color: var(--secondary);
@@ -71,13 +69,10 @@
 		height: 100%;
 		max-height: 70rem;
 		border-radius: 10px;
-		overflow-y: scroll;
-		overflow-x: hidden;
 		background-color: var(--primary);
 	}
 	@media only screen and (max-width: 450px) {
 		/* Styles here */
-
 		.responsive-width {
 			width: 100vw;
 		}

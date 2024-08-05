@@ -13,15 +13,3 @@ export async function createGoogleSheetsClient(): Promise<sheets_v4.Sheets> {
 
 	return sheets;
 }
-
-export async function insertIntoSheet(range: string, values: any[][]) {
-	const client = await createGoogleSheetsClient();
-	await client.spreadsheets.values.append({
-		spreadsheetId: env.SPREADSHEET_ID,
-		range: range,
-		valueInputOption: 'USER_ENTERED',
-		requestBody: {
-			values
-		}
-	});
-}

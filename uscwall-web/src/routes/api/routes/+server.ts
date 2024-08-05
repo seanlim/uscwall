@@ -25,7 +25,10 @@ function buildRoute(data: string[]): App.Route {
 	};
 }
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, setHeaders }) => {
+	setHeaders({
+		'Cache-Control': 'public, max-age=180'
+	});
 	const routeIDQuery = url.searchParams.get('id');
 
 	const client = await createGoogleSheetsClient();

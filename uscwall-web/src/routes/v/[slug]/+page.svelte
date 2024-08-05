@@ -47,14 +47,6 @@
 
 {#if route != null}
 	<div class="container">
-		<!-- <button
-			on:click={() => {
-				// history.length will always be at least 1
-				history.length === 1 ? goto('/') : history.back();
-			}}
-		>
-			&larr; Back to routes</button
-		> -->
 		<h3>
 			{route.route_name}
 		</h3>
@@ -63,7 +55,6 @@
 		<small>
 			Set by {route.setter_name} (@{route.setter_handle})
 		</small>
-		<a href={route?.image_url}> View/Download full image </a>
 	</div>
 {:else}
 	Not found
@@ -77,6 +68,5 @@
 	.container {
 		height: 100%;
 		padding: 0.3rem;
-		overflow: none;
 	}
 </style>
