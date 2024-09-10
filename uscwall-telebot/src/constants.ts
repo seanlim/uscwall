@@ -14,6 +14,7 @@ export const Grades = {
 export const SECTORS_BUTTONS = [[Sectors.Spray, Sectors.Board]];
 
 export const GRADES_BUTTONS = [
+  [Grades.Wild],
   [Grades.Easy, Grades.Medium],
   [Grades.Hard, Grades.Harder],
 ];
