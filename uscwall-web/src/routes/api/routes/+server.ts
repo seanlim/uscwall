@@ -4,10 +4,11 @@ import { createGoogleSheetsClient } from '@/apiHelpers';
 import _ from 'lodash';
 
 const GRADES: string[] = [
-	'⬜️ Beginner (V0-V1)',
+	'⬜️ Beginner (V1 and Below)',
 	'🟩 Easy (V2-V3)',
 	'🟦 Intermediate (V4-V5)',
-	'🟥 Hard (≥V5)'
+	'🟥 Hard (V6 and beyond)',
+	'🟪 Wild'
 ];
 
 function buildRoute(data: string[]): App.Route {
