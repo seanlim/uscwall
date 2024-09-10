@@ -2,5 +2,5 @@
   "watch": ["src"],
   "ext": ".ts,.js",
   "ignore": [],
-  "exec": "ts-node --transpiler sucrase/ts-node-plugin -r tsconfig-paths/register ./src/index.ts"
+  "exec": "tsc && resolve-tspaths && node build/index.js"
 }
