@@ -25,5 +25,8 @@
     "dev": "nodemon",
     "build": "tsc && resolve-tspaths",
     "start": "node build/index.js"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
