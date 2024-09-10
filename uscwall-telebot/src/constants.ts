@@ -1,20 +1,17 @@
 export const Sectors = {
-  Left: "Left Sector (Vertical Wall)",
-  Middle: "Middle Sector (Overhang Wall)",
-  Right: "Right Sector (Slab Wall)",
+  Board: "Board Sector (Right)",
+  Spray: "Spray Sector (Left)",
 };
 
 export const Grades = {
-  Easy: "⬜️ Beginner (V0-V1)",
+  Easy: "⬜️ Beginner (V1 and Below)",
   Medium: "🟩 Easy (V2-V3)",
   Hard: "🟦 Intermediate (V4-V5)",
-  Harder: "🟥 Hard (≥V5)",
+  Harder: "🟥 Hard (V6 and beyond)",
+  Wild: "🟪 Wild",
 };
 
-export const SECTORS_BUTTONS = [
-  [Sectors.Left, Sectors.Middle],
-  [Sectors.Right],
-];
+export const SECTORS_BUTTONS = [[Sectors.Spray, Sectors.Board]];
 
 export const GRADES_BUTTONS = [
   [Grades.Easy, Grades.Medium],

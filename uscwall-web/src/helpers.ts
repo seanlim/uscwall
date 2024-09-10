@@ -5,8 +5,12 @@ export function resolveTag(grade: string) {
 	}
 	if (grade.includes('V4-V5')) {
 		return 'is-medium';
-	} else if (grade.includes('V5')) {
+	}
+	if (grade.includes('V6 and beyond')) {
 		return 'is-hard';
+	}
+	if (grade.includes('Wild')) {
+		return 'is-wild';
 	}
 	// defaults to V0
 }

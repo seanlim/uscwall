@@ -99,6 +99,10 @@
 	.tag.is-hard {
 		color: #ff1d15;
 	}
+
+	.tag.is-wild {
+		color: #b915ff;
+	}
 	.skeleton {
 		width: 100%;
 		height: 100%;
