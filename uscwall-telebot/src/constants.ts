@@ -1,6 +1,8 @@
 export const Sectors = {
-  Board: "Board Sector (Right)",
-  Spray: "Spray Sector (Left)",
+  Left: "Left of Overhang Wall",
+  Spray: "Overhang Wall (Left Spray)",
+  Board: "Overhang Wall (Right Board)",
+  Right: "Right of Overhang Wall",
 };
 
 export const Grades = {
@@ -11,12 +13,12 @@ export const Grades = {
   Wild: "🟪 Wild",
 };
 
-export const SECTORS_BUTTONS = [[Sectors.Spray, Sectors.Board]];
+export const SECTORS_BUTTONS = [[Sectors.Left], [Sectors.Spray], [Sectors.Board], [Sectors.Right]];
 
 export const GRADES_BUTTONS = [
-  [Grades.Wild],
   [Grades.Easy, Grades.Medium],
   [Grades.Hard, Grades.Harder],
+  [Grades.Wild],
 ];
 
 export const WORKSHEET_SUBMISSIONS = "submissions";
