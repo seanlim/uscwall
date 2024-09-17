@@ -1,5 +1,5 @@
 import { Composer, Markup } from "telegraf";
-import { USCBotContext } from "../..";
+import { USCBotContext } from "~/index";
 import { message } from "telegraf/filters";
 import {
   Grades,
@@ -7,14 +7,13 @@ import {
   Sectors,
   SECTORS_BUTTONS,
   WORKSHEET_SUBMISSIONS,
-} from "../../constants";
+} from "~/constants";
 import { randomUUID } from "crypto";
 import {
-  createGoogleSheetsClient,
   getTelegramFilePath,
   insertIntoSheet,
   uploadFileToImgBB,
-} from "../../helpers";
+} from "~/helpers";
 import messages from "~/messages";
 
 export const uploadHandler = new Composer<USCBotContext>();
@@ -103,9 +102,6 @@ submissionHandler.action("confirm", async (ctx) => {
 
   await ctx.reply("Uploading image...");
 
-  await ctx.reply(
-    "Your route will be vetted by the team before it is made public, do allow a few days for this process."
-  );
 
   // Upload
   try {
@@ -135,6 +131,9 @@ submissionHandler.action("confirm", async (ctx) => {
   }
 
   await ctx.reply("Done!");
+  await ctx.reply(
+    "Your route will be vetted by the team before it is made public, do allow a few days for this process."
+  );
 
   return ctx.scene.leave();
 });
