@@ -13,6 +13,7 @@
 	import { isTMA as checkTMA } from '@tma.js/sdk';
 	import Filters from '@/components/Filters.svelte';
 	import type { Snapshot } from '@sveltejs/kit';
+	import RouteModal from '@/components/RouteModal.svelte';
 
 	mixpanel.init(PUBLIC_MIXPANEL_PROJECT_TOKEN, {
 		track_pageview: true,
@@ -25,14 +26,17 @@
 	let scrollY = 0;
 	let containerRef: HTMLDivElement;
 
+	let showRouteModal = false;
+	let selectedRoute: App.Route;
+
 	export const snapshot: Snapshot<number> = {
-		capture: () =>  scrollY,
-		restore: (scrollValue: number) => scrollY = scrollValue,
+		capture: () => scrollY,
+		restore: (scrollValue: number) => (scrollY = scrollValue)
 	};
 
 	afterUpdate(() => {
 		containerRef.scrollTo({ top: scrollY, behavior: 'smooth' });
-	})
+	});
 
 	$: filteredRoutes =
 		$routes.routes?.filter((route) => {
@@ -55,9 +59,9 @@
 			return r && g && s;
 		}) ?? [];
 
-		function didScroll (e: UIEvent) {
-			scrollY= e.target.scrollTop;
-		}
+	function didScroll(e: UIEvent) {
+		scrollY = e.target.scrollTop;
+	}
 
 	async function fetchRoutes() {
 		isLoading = true;
@@ -84,6 +88,13 @@
 		window.Telegram.WebApp.ready();
 		fetchRoutes();
 	});
+
+	function handleRouteSelect(r: App.Route) {
+		return () => {
+			selectedRoute = r;
+			showRouteModal = true;
+		};
+	}
 </script>
 
 <div class="cont" on:scroll={didScroll} bind:this={containerRef}>
@@ -101,17 +112,12 @@
 			Showing {filteredRoutes.length} routes
 		{/if}
 		{#each filteredRoutes as route}
-			<div
-				class="route"
-				on:mouseup={() => goto(`${base}/v/${route.id}`)}
-			>
+			<div class="route" on:mouseup={handleRouteSelect(route)} aria-pressed={true}>
 				<img class="thumbnail" src={route.image_url} alt="route" width="50" height="50" />
 				<div class="content">
 					<div class="title-row">
 						<span class="title">
-							<a href={`${base}/v/${route.id}`}>
 								{route.route_name}
-							</a>
 						</span>
 						<span class={`tag ${resolveTag(route.grade)}`}>
 							{route.grade}
@@ -124,6 +130,7 @@
 			</div>
 		{/each}
 	</div>
+	<RouteModal bind:showModal={showRouteModal} bind:selectedRoute={selectedRoute} />
 </div>
 
 <style>
