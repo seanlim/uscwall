@@ -27,7 +27,7 @@
 	let containerRef: HTMLDivElement;
 
 	let showRouteModal = false;
-	let selectedRoute: App.Route;
+	let selectedRouteIndex = -1
 
 	export const snapshot: Snapshot<number> = {
 		capture: () => scrollY,
@@ -59,6 +59,8 @@
 			return r && g && s;
 		}) ?? [];
 
+	$: selectedRoute =  filteredRoutes[selectedRouteIndex];
+
 	function didScroll(e: UIEvent) {
 		scrollY = e.target.scrollTop;
 	}
@@ -89,9 +91,9 @@
 		fetchRoutes();
 	});
 
-	function handleRouteSelect(r: App.Route) {
+	function handleRouteSelect(idx: number) {
 		return () => {
-			selectedRoute = r;
+			selectedRouteIndex = idx;
 			showRouteModal = true;
 		};
 	}
@@ -111,8 +113,8 @@
 		{:else}
 			Showing {filteredRoutes.length} routes
 		{/if}
-		{#each filteredRoutes as route}
-			<div class="route" on:mouseup={handleRouteSelect(route)} aria-pressed={true}>
+		{#each filteredRoutes as route, i}
+			<button type="button" class="route" on:click={handleRouteSelect(i)}>
 				<img class="thumbnail" src={route.image_url} alt="route" width="50" height="50" />
 				<div class="content">
 					<div class="title-row">
@@ -127,7 +129,7 @@
 						Set by {route.setter_name ?? 'unknown'} | {route.route_type}
 					</span>
 				</div>
-			</div>
+			</button>
 		{/each}
 	</div>
 	<RouteModal bind:showModal={showRouteModal} bind:selectedRoute={selectedRoute} />
@@ -147,6 +149,11 @@
 		border-bottom: var(--light-gray) 1.3px solid;
 		display: flex;
 		flex-direction: row;
+		background: var(--background);
+		color: var(--secondary);
+		font-weight: 300;
+		text-align: left;
+		width: 100%;
 	}
 	.route .content {
 		margin-left: 0.5rem;
