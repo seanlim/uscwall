@@ -1,4 +1,4 @@
 [build]
-base = "uscwall-web"
+base = "web"
 command = "NODE_ENV=production && npm run build"
 publish = "build"
