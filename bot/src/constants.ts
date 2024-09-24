@@ -10,7 +10,7 @@ export const Grades = {
   Medium: "🟩 Easy (V2-V3)",
   Hard: "🟦 Intermediate (V4-V5)",
   Harder: "🟥 Hard (V6 and beyond)",
-  Wild: "🟪 Wild",
+  Wild: "🟪 Ungraded",
 };
 
 export const SECTORS_BUTTONS = [[Sectors.Left], [Sectors.Spray], [Sectors.Board], [Sectors.Right]];

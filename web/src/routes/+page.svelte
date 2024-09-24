@@ -60,10 +60,11 @@
 		}
 
 	async function fetchRoutes() {
-		// isLoading = true;
+		isLoading = true;
 		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
 		const data = await res.json();
-		// isLoading = false;
+		isLoading = false;
+
 		window.Telegram.WebApp.expand();
 		if (res.ok) {
 			isError = false;

@@ -8,7 +8,7 @@ const GRADES: string[] = [
 	'🟩 Easy (V2-V3)',
 	'🟦 Intermediate (V4-V5)',
 	'🟥 Hard (V6 and beyond)',
-	'🟪 Wild'
+	'🟪 Ungraded',
 ];
 
 function buildRoute(data: string[]): App.Route {
