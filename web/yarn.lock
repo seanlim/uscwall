@@ -2113,6 +2113,11 @@ svelte@^4.2.18:
     magic-string "^0.30.4"
     periscopic "^3.1.0"
 
+telegram-webapps@^7.10.0:
+  version "7.10.0"
+  resolved "https://registry.npmjs.org/telegram-webapps/-/telegram-webapps-7.10.0.tgz#a33475fc61716d60a4e521a3967a4e50b27f8ec3"
+  integrity sha512-n4GwQZTrXb+hfdoBav2G66VKRUdEgpHAlueaJ/V11hEgupfnJ6JBG9nARXC2jw++QpDUgkueqo/5z3wd9TC3tg==
+
 text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"

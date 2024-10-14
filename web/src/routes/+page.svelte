@@ -2,7 +2,6 @@
 	import mixpanel from 'mixpanel-browser';
 	import { PUBLIC_HOSTNAME, PUBLIC_MIXPANEL_PROJECT_TOKEN } from '$env/static/public';
 	import { goto } from '$app/navigation';
-	import { base } from '$app/paths';
 
 	import { resolveTag } from '@/helpers';
 	import { filters } from '@stores/filters';
@@ -13,6 +12,7 @@
 	import { isTMA as checkTMA } from '@tma.js/sdk';
 	import Filters from '@/components/Filters.svelte';
 	import type { Snapshot } from '@sveltejs/kit';
+	import RouteModal from '@/components/RouteModal.svelte';
 
 	mixpanel.init(PUBLIC_MIXPANEL_PROJECT_TOKEN, {
 		track_pageview: true,
@@ -25,14 +25,17 @@
 	let scrollY = 0;
 	let containerRef: HTMLDivElement;
 
+	let showRouteModal = false;
+	let selectedRouteIndex = -1;
+
 	export const snapshot: Snapshot<number> = {
-		capture: () =>  scrollY,
-		restore: (scrollValue: number) => scrollY = scrollValue,
+		capture: () => scrollY,
+		restore: (scrollValue: number) => (scrollY = scrollValue)
 	};
 
 	afterUpdate(() => {
 		containerRef.scrollTo({ top: scrollY, behavior: 'smooth' });
-	})
+	});
 
 	$: filteredRoutes =
 		$routes.routes?.filter((route) => {
@@ -55,9 +58,9 @@
 			return r && g && s;
 		}) ?? [];
 
-		function didScroll (e: UIEvent) {
-			scrollY= e.target.scrollTop;
-		}
+	function didScroll(e: UIEvent) {
+		scrollY = e.target.scrollTop;
+	}
 
 	async function fetchRoutes() {
 		isLoading = true;
@@ -65,7 +68,7 @@
 		const data = await res.json();
 		isLoading = false;
 
-		window.Telegram.WebApp.expand();
+		Telegram.WebApp.expand();
 		if (res.ok) {
 			isError = false;
 			routes.update(data);
@@ -81,9 +84,16 @@
 		if (!isTMA && import.meta.env.PROD) {
 			goto('https://t.me/USCTelebot');
 		}
-		window.Telegram.WebApp.ready();
+		Telegram.WebApp.ready();
 		fetchRoutes();
 	});
+
+	function handleRouteSelect(idx: number) {
+		return () => {
+			selectedRouteIndex = idx;
+			showRouteModal = true;
+		};
+	}
 </script>
 
 <div class="cont" on:scroll={didScroll} bind:this={containerRef}>
@@ -98,20 +108,17 @@
 				<EmptyState />
 			{/if}
 		{:else}
-			Showing {filteredRoutes.length} routes
+			<span class="route-length-label">
+				Showing {filteredRoutes.length} routes
+			</span>
 		{/if}
-		{#each filteredRoutes as route}
-			<div
-				class="route"
-				on:mouseup={() => goto(`${base}/v/${route.id}`)}
-			>
+		{#each filteredRoutes as route, i}
+			<button type="button" class="route" on:click={handleRouteSelect(i)}>
 				<img class="thumbnail" src={route.image_url} alt="route" width="50" height="50" />
 				<div class="content">
 					<div class="title-row">
 						<span class="title">
-							<a href={`${base}/v/${route.id}`}>
-								{route.route_name}
-							</a>
+							{route.route_name}
 						</span>
 						<span class={`tag ${resolveTag(route.grade)}`}>
 							{route.grade}
@@ -121,9 +128,14 @@
 						Set by {route.setter_name ?? 'unknown'} | {route.route_type}
 					</span>
 				</div>
-			</div>
+			</button>
 		{/each}
 	</div>
+	<RouteModal
+		bind:showModal={showRouteModal}
+		bind:selectedIndex={selectedRouteIndex}
+		bind:routes={filteredRoutes}
+	/>
 </div>
 
 <style>
@@ -140,6 +152,11 @@
 		border-bottom: var(--light-gray) 1.3px solid;
 		display: flex;
 		flex-direction: row;
+		background: var(--background);
+		color: var(--secondary);
+		font-weight: 300;
+		text-align: left;
+		width: 100%;
 	}
 	.route .content {
 		margin-left: 0.5rem;
@@ -161,24 +178,26 @@
 	.route .description {
 		font-size: 0.7rem;
 	}
-
 	.route .thumbnail {
 		width: 3rem;
 		height: 3rem;
 		object-fit: cover;
 		background: var(--light-gray);
 	}
-
 	.route:hover {
 		background: var(--light-gray);
 	}
 	.route:active {
 		outline: auto;
 	}
-
 	.routes-container {
 		padding: 0 0 5px 0;
 		margin-bottom: 1rem;
 		flex: 1;
+	}
+	.route-length-label {
+		padding-left: 0.5em;
+		font-size: small;
+		font-weight: 500;
 	}
 </style>

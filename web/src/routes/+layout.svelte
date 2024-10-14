@@ -84,9 +84,9 @@
 	.tag {
 		background-color: var(--light-gray);
 		border-radius: 5px;
-		padding: 0.5rem;
+		padding: 0.3rem;
 		font-weight: bold;
-		font-size: 0.7rem;
+		font-size: 0.6rem;
 	}
 
 	.tag.is-easy {
