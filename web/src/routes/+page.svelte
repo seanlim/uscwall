@@ -108,7 +108,9 @@
 				<EmptyState />
 			{/if}
 		{:else}
-			Showing {filteredRoutes.length} routes
+			<span class="route-length-label">
+				Showing {filteredRoutes.length} routes
+			</span>
 		{/if}
 		{#each filteredRoutes as route, i}
 			<button type="button" class="route" on:click={handleRouteSelect(i)}>
@@ -176,24 +178,26 @@
 	.route .description {
 		font-size: 0.7rem;
 	}
-
 	.route .thumbnail {
 		width: 3rem;
 		height: 3rem;
 		object-fit: cover;
 		background: var(--light-gray);
 	}
-
 	.route:hover {
 		background: var(--light-gray);
 	}
 	.route:active {
 		outline: auto;
 	}
-
 	.routes-container {
 		padding: 0 0 5px 0;
 		margin-bottom: 1rem;
 		flex: 1;
+	}
+	.route-length-label {
+		padding-left: 0.5em;
+		font-size: small;
+		font-weight: 500;
 	}
 </style>
