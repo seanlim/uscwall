@@ -22,7 +22,7 @@ Submissions will be vetted based on the following guidelines:
  \\- Contain start and top holds that are clearly marked out\\.
  \\- Have footholds that are distinguished from handholds\\.
 
-Here is a [Reference route](https://i.imgur.com/pQDIPGu.webp?maxwidth=1500&shape=thumb&fidelity=high)\\.
+Here is a [Reference route](https://i.ibb.co/mFTfq3K/file-1263.jpg)\\.
 
 To begin, please attach an image of your proposed route\\.
 
