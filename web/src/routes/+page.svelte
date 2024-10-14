@@ -2,7 +2,6 @@
 	import mixpanel from 'mixpanel-browser';
 	import { PUBLIC_HOSTNAME, PUBLIC_MIXPANEL_PROJECT_TOKEN } from '$env/static/public';
 	import { goto } from '$app/navigation';
-	import { base } from '$app/paths';
 
 	import { resolveTag } from '@/helpers';
 	import { filters } from '@stores/filters';
@@ -27,7 +26,7 @@
 	let containerRef: HTMLDivElement;
 
 	let showRouteModal = false;
-	let selectedRouteIndex = -1
+	let selectedRouteIndex = -1;
 
 	export const snapshot: Snapshot<number> = {
 		capture: () => scrollY,
@@ -59,8 +58,6 @@
 			return r && g && s;
 		}) ?? [];
 
-	$: selectedRoute =  filteredRoutes[selectedRouteIndex];
-
 	function didScroll(e: UIEvent) {
 		scrollY = e.target.scrollTop;
 	}
@@ -71,7 +68,7 @@
 		const data = await res.json();
 		isLoading = false;
 
-		window.Telegram.WebApp.expand();
+		Telegram.WebApp.expand();
 		if (res.ok) {
 			isError = false;
 			routes.update(data);
@@ -87,7 +84,7 @@
 		if (!isTMA && import.meta.env.PROD) {
 			goto('https://t.me/USCTelebot');
 		}
-		window.Telegram.WebApp.ready();
+		Telegram.WebApp.ready();
 		fetchRoutes();
 	});
 
@@ -119,7 +116,7 @@
 				<div class="content">
 					<div class="title-row">
 						<span class="title">
-								{route.route_name}
+							{route.route_name}
 						</span>
 						<span class={`tag ${resolveTag(route.grade)}`}>
 							{route.grade}
@@ -132,7 +129,11 @@
 			</button>
 		{/each}
 	</div>
-	<RouteModal bind:showModal={showRouteModal} bind:selectedRoute={selectedRoute} />
+	<RouteModal
+		bind:showModal={showRouteModal}
+		bind:selectedIndex={selectedRouteIndex}
+		bind:routes={filteredRoutes}
+	/>
 </div>
 
 <style>
