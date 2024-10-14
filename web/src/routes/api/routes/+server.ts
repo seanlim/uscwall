@@ -3,6 +3,7 @@ import { env } from '$env/dynamic/private';
 import { createGoogleSheetsClient } from '@/apiHelpers';
 import _ from 'lodash';
 
+// TODO: maybe add a query for this
 const GRADES: string[] = [
 	'⬜️ V1 and Below',
 	'🟩 V2-V3',
@@ -35,12 +36,11 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 	const client = await createGoogleSheetsClient();
 	const sheetsRoutes = await client.spreadsheets.values.get({
 		spreadsheetId: env.SPREADSHEET_ID,
-		range: 'vetted worksheet!A2:J'
+		range: 'vetted worksheet!A1:J'
 	});
 
-	let routes = sheetsRoutes.data.values
-		?.map(buildRoute)
-		.sort((a, b) => GRADES.indexOf(a.grade) - GRADES.indexOf(b.grade));
+	let routes = sheetsRoutes.data.values?.map(buildRoute);
+
 	if (routeIDQuery != null && routeIDQuery != '') {
 		routes = routes?.filter((r) => r.id === routeIDQuery);
 	}
