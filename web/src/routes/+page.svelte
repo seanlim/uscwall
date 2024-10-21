@@ -1,7 +1,10 @@
 <script lang="ts">
 	import mixpanel from 'mixpanel-browser';
-	import { PUBLIC_HOSTNAME, PUBLIC_MIXPANEL_PROJECT_TOKEN } from '$env/static/public';
-	import { goto } from '$app/navigation';
+	import {
+		PUBLIC_HOSTNAME,
+		PUBLIC_MIXPANEL_PROJECT_TOKEN,
+		PUBLIC_TELEGRAM_BOT_URL
+	} from '$env/static/public';
 
 	import { resolveTag } from '@/helpers';
 	import { filters } from '@stores/filters';
@@ -68,7 +71,6 @@
 		const data = await res.json();
 		isLoading = false;
 
-		Telegram.WebApp.expand();
 		if (res.ok) {
 			isError = false;
 			routes.update(data);
@@ -79,13 +81,20 @@
 		}
 	}
 
-	onMount(async () => {
+	async function checkIfTMA() {
 		const isTMA = await checkTMA();
 		if (!isTMA && import.meta.env.PROD) {
-			goto('https://t.me/USCTelebot');
+			console.error('Non-Telegram client detected. Redirecting to Telegram URL...');
+			window.location.replace(PUBLIC_TELEGRAM_BOT_URL);
 		}
+	}
+
+	onMount(async () => {
+		await checkIfTMA();
+		await fetchRoutes();
+
 		Telegram.WebApp.ready();
-		fetchRoutes();
+		Telegram.WebApp.expand();
 	});
 
 	function handleRouteSelect(idx: number) {

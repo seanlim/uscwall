@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { resolveTag } from '@/helpers';
 	import Modal from './Modal.svelte';
+	import { PUBLIC_HOSTNAME } from '$env/static/public';
 
 	export let showModal = false;
-	export let routes: App.Route[];
+	export let routes: Route[];
 	export let selectedIndex: number;
+
+	let isRouteSent = false;
 
 	$: selectedRoute = routes[selectedIndex];
 
@@ -18,6 +21,58 @@
 	};
 	const cycle = () => {
 		selectedIndex = ((selectedIndex % routes.length) + routes.length) % routes.length;
+	};
+
+	const logAscent = async (isFlash: boolean = false, grade: Grade = selectedRoute.grade) => {
+		const res = await fetch(`${PUBLIC_HOSTNAME}/api/ascent`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				route_id: selectedRoute.id,
+				username:
+					process.env.NODE_ENV === 'production'
+						? Telegram.WebApp.initDataUnsafe.user?.username
+						: 'testuser',
+				is_flash: isFlash,
+				grade,
+				date_created: new Date()
+			})
+		});
+
+		if (res.status == 400) {
+			console.error('POST failed');
+		}
+		if (res.ok) {
+			console.debug('POST completed successfully');
+			isRouteSent = true;
+		}
+	};
+
+	const unSend = async () => {
+		const res = await fetch(`${PUBLIC_HOSTNAME}/api/ascent`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				route_id: selectedRoute.id,
+				username:
+					process.env.NODE_ENV === 'production'
+						? Telegram.WebApp.initDataUnsafe.user?.username
+						: 'testuser',
+				date_created: new Date()
+			})
+		});
+
+		if (res.status == 400) {
+			console.error('POST failed');
+		}
+		if (res.ok) {
+			console.debug('POST completed successfully');
+			isRouteSent = false;
+		}
 	};
 </script>
 
@@ -37,6 +92,12 @@
 		</div>
 		<div class="action-bar">
 			<button on:click={decrementIndex}>Prev.</button>
+			{#if isRouteSent}
+				<button on:click={() => unSend()}>Mark as Unsent</button>
+			{:else}
+				<button on:click={() => logAscent()}>Log Ascent</button>
+				<button on:click={() => logAscent(true)}>Log Flash</button>
+			{/if}
 			<button on:click={incrementIndex}>Next</button>
 		</div>
 	{/if}
