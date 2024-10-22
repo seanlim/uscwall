@@ -11,6 +11,10 @@ const Ascent = {
 	Unsent: 'UNSENT'
 };
 
+export const DEFAULT_CACHE_CONTROL_HEADER = {
+	'Cache-Control': 'public, max-age=180'
+};
+
 export async function initializeSheetsClient() {
 	const jwtClient = new google.auth.JWT(
 		env.SHEETS_CLIENT_NAME,

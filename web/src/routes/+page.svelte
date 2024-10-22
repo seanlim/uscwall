@@ -1,10 +1,6 @@
 <script lang="ts">
 	import mixpanel from 'mixpanel-browser';
-	import {
-		PUBLIC_HOSTNAME,
-		PUBLIC_MIXPANEL_PROJECT_TOKEN,
-		PUBLIC_TELEGRAM_BOT_URL
-	} from '$env/static/public';
+	import { PUBLIC_MIXPANEL_PROJECT_TOKEN, PUBLIC_TELEGRAM_BOT_URL } from '$env/static/public';
 
 	import { resolveTag } from '@/helpers';
 	import { filters } from '@stores/filters';
@@ -16,6 +12,7 @@
 	import Filters from '@/components/Filters.svelte';
 	import type { Snapshot } from '@sveltejs/kit';
 	import RouteModal from '@/components/RouteModal.svelte';
+	import { sendRequest } from '@/apiClient';
 
 	mixpanel.init(PUBLIC_MIXPANEL_PROJECT_TOKEN, {
 		track_pageview: true,
@@ -67,18 +64,15 @@
 
 	async function fetchRoutes() {
 		isLoading = true;
-		const res = await fetch(`${PUBLIC_HOSTNAME}/api/routes`);
-		const data = await res.json();
-		isLoading = false;
-
-		if (res.ok) {
-			isError = false;
+		let data;
+		try {
+			data = await sendRequest('/routes', 'GET');
 			routes.update(data);
 			return data;
-		} else {
+		} catch (e) {
 			isError = true;
-			throw new Error(data);
 		}
+		isLoading = false;
 	}
 
 	async function checkIfTMA() {

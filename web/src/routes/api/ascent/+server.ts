@@ -3,7 +3,8 @@ import {
 	getAscentsSheetRows,
 	updateAscent,
 	logNewAscent,
-	unSendRoute
+	unSendRoute,
+	DEFAULT_CACHE_CONTROL_HEADER
 } from '@/apiHelpers';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
@@ -26,18 +27,34 @@ export const POST: RequestHandler = async ({ request }) => {
 	if (ascentIndex && ascentIndex !== -1) {
 		// If the user does not yet have an ascent, we insert a new record
 		await updateAscent(ascentIndex, ascent);
-		return new Response('Updated', { status: 201 });
+		return json({ message: 'Updated' }, { status: 200 });
 	}
 
 	// If the user does not yet have an ascent, we insert a new record
 	await logNewAscent(ascent);
 
-	return new Response('OK', { status: 200 });
+	return json({ message: 'OK' }, { status: 200 });
 };
 
-export const GET = async () => {
+export const GET = async ({ url, setHeaders }) => {
+	setHeaders({
+		...DEFAULT_CACHE_CONTROL_HEADER
+	});
+
+	const routeIDQuery = url.searchParams.get('route_id');
+	const usernameQuery = url.searchParams.get('username');
+
 	const sheetsAscentRows = await getAscentsSheetRows();
-	const ascents = sheetsAscentRows?.map(buildAscent);
+	let ascents = sheetsAscentRows?.map(buildAscent);
+
+	// query
+	if (routeIDQuery != null && routeIDQuery !== '') {
+		ascents = ascents?.filter((a) => a.route_id === routeIDQuery);
+	}
+	if (usernameQuery != null && usernameQuery !== '') {
+		ascents = ascents?.filter((a) => a.username === usernameQuery);
+	}
+
 	return json({
 		ascents
 	});
@@ -53,10 +70,10 @@ export const DELETE = async ({ request }) => {
 	);
 
 	if (ascentIndex && ascentIndex !== -1) {
-		// If the user does not yet have an ascent, we insert a new record
 		await unSendRoute(ascentIndex);
-		return new Response('Updated', { status: 201 });
+		return json({ message: 'Updated ' }, { status: 200 });
 	}
 
-	return new Response('OK', { status: 200 });
+	// Ignore if no ascent
+	return json({ message: 'OK' }, { status: 200 });
 };
