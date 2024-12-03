@@ -24,6 +24,7 @@ type Route = {
 type Ascent = {
 	route_id: string;
 	username: string;
+	is_done: boolean;
 	is_flash: boolean;
 	grade: Grade;
 	date_created: Date;

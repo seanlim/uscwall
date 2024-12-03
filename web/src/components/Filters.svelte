@@ -53,4 +53,7 @@
 	.filters-container select {
 		padding: 0.2rem;
 	}
+	hr {
+		width: 100%;
+	}
 </style>

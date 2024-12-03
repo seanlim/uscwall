@@ -2,7 +2,7 @@
 	import mixpanel from 'mixpanel-browser';
 	import { PUBLIC_MIXPANEL_PROJECT_TOKEN, PUBLIC_TELEGRAM_BOT_URL } from '$env/static/public';
 
-	import { resolveTag } from '@/helpers';
+	import { getTelegramUsername, resolveTag } from '@/helpers';
 	import { filters } from '@stores/filters';
 	import { routes } from '@stores/routes';
 	import { afterUpdate, onMount } from 'svelte';
@@ -13,6 +13,7 @@
 	import type { Snapshot } from '@sveltejs/kit';
 	import RouteModal from '@/components/RouteModal.svelte';
 	import { sendRequest } from '@/apiClient';
+	import { derived, writable } from 'svelte/store';
 
 	mixpanel.init(PUBLIC_MIXPANEL_PROJECT_TOKEN, {
 		track_pageview: true,
@@ -28,6 +29,9 @@
 	let showRouteModal = false;
 	let selectedRouteIndex = -1;
 
+	let ascents = writable<Set<string>>(new Set([]));
+	let flashes = writable<Set<string>>(new Set([]));
+
 	export const snapshot: Snapshot<number> = {
 		capture: () => scrollY,
 		restore: (scrollValue: number) => (scrollY = scrollValue)
@@ -37,26 +41,29 @@
 		containerRef.scrollTo({ top: scrollY, behavior: 'smooth' });
 	});
 
-	$: filteredRoutes =
-		$routes.routes?.filter((route) => {
-			let r = false;
-			if (
-				route.route_name.toLowerCase().includes($filters.query.toLowerCase()) ||
-				route.setter_name.toLowerCase().includes($filters.query.toLowerCase()) ||
-				route.setter_handle.toLowerCase().includes($filters.query.toLowerCase())
-			) {
-				r = true;
-			}
-			let g = $filters.grade == '*';
-			if ($filters.grade !== '*' && route.grade == $filters.grade) {
-				g = true;
-			}
-			let s = $filters.sector == '*';
-			if ($filters.sector !== '*' && route.route_type == $filters.sector) {
-				s = true;
-			}
-			return r && g && s;
-		}) ?? [];
+	const filteredRoutes = derived(
+		routes,
+		($routes) =>
+			$routes.routes?.filter((route) => {
+				let r = false;
+				if (
+					route.route_name.toLowerCase().includes($filters.query.toLowerCase()) ||
+					route.setter_name.toLowerCase().includes($filters.query.toLowerCase()) ||
+					route.setter_handle.toLowerCase().includes($filters.query.toLowerCase())
+				) {
+					r = true;
+				}
+				let g = $filters.grade == '*';
+				if ($filters.grade !== '*' && route.grade == $filters.grade) {
+					g = true;
+				}
+				let s = $filters.sector == '*';
+				if ($filters.sector !== '*' && route.route_type == $filters.sector) {
+					s = true;
+				}
+				return r && g && s;
+			}) ?? []
+	);
 
 	function didScroll(e: UIEvent) {
 		scrollY = e.target.scrollTop;
@@ -75,6 +82,16 @@
 		isLoading = false;
 	}
 
+	async function fetchUserAscents() {
+		const ascentsRes = await sendRequest(`/ascent?username=${getTelegramUsername()}`, 'GET');
+		if ('ascents' in ascentsRes) {
+			let ascentsArray: Ascent[] = ascentsRes['ascents'];
+			ascentsArray = ascentsArray.filter((a) => a.is_done);
+			ascents.set(new Set(ascentsArray.map((a) => a.route_id)));
+			flashes.set(new Set(ascentsArray.filter((a) => a.is_flash).map((a) => a.route_id)));
+		}
+	}
+
 	async function checkIfTMA() {
 		const isTMA = await checkTMA();
 		if (!isTMA && import.meta.env.PROD) {
@@ -86,6 +103,7 @@
 	onMount(async () => {
 		await checkIfTMA();
 		await fetchRoutes();
+		await fetchUserAscents();
 
 		Telegram.WebApp.ready();
 		Telegram.WebApp.expand();
@@ -102,7 +120,7 @@
 <div class="cont" on:scroll={didScroll} bind:this={containerRef}>
 	<Filters />
 	<div class="routes-container">
-		{#if filteredRoutes.length < 1}
+		{#if $filteredRoutes.length < 1}
 			{#if isLoading}
 				<RoutesSkeleton />
 			{:else if isError}
@@ -112,16 +130,21 @@
 			{/if}
 		{:else}
 			<span class="route-length-label">
-				Showing {filteredRoutes.length} routes
+				Sent {$ascents.size} out of {$filteredRoutes.length} routes.
 			</span>
 		{/if}
-		{#each filteredRoutes as route, i}
+		{#each $filteredRoutes as route, i}
 			<button type="button" class="route" on:click={handleRouteSelect(i)}>
 				<img class="thumbnail" src={route.image_url} alt="route" width="50" height="50" />
 				<div class="content">
 					<div class="title-row">
 						<span class="title">
 							{route.route_name}
+							{#if $flashes.has(route.id)}
+								(⚡ FLASHED)
+							{:else if $ascents.has(route.id)}
+								(✅ SENT)
+							{/if}
 						</span>
 						<span class={`tag ${resolveTag(route.grade)}`}>
 							{route.grade}
@@ -137,7 +160,8 @@
 	<RouteModal
 		bind:showModal={showRouteModal}
 		bind:selectedIndex={selectedRouteIndex}
-		bind:routes={filteredRoutes}
+		routes={filteredRoutes}
+		bind:ascents
 	/>
 </div>
 

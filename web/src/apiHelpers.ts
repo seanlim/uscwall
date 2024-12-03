@@ -133,6 +133,7 @@ export function buildAscent(row: string[]): Ascent {
 	return {
 		route_id: row[0],
 		username: row[1],
+		is_done: ['SEND', 'FLASH'].includes(row[2]),
 		is_flash: row[2] === 'FLASH',
 		grade: row[3] as Grade,
 		date_created: new Date(row[4])

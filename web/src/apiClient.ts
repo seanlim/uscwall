@@ -3,13 +3,13 @@ import type { HttpMethod } from '@sveltejs/kit';
 
 export type APIPath = '/ascent' | '/routes';
 
-export async function sendRequest(path: APIPath, method: HttpMethod, body: object = {}) {
+export async function sendRequest(path: APIPath | string, method: HttpMethod, body?: object) {
 	const res = await fetch(`${PUBLIC_HOSTNAME}/api${path}`, {
 		method: method,
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(body)
+		body: body && JSON.stringify(body)
 	});
 	if (!res.ok) {
 		throw new Error('Error while sending request');

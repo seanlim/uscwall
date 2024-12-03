@@ -21,3 +21,7 @@ export function debug(msg: string) {
 	}
 	console.debug(msg);
 }
+
+export function getTelegramUsername() {
+	return Telegram.WebApp.initDataUnsafe.user?.username || 'unknown';
+}
