@@ -6,6 +6,7 @@ import {
 	unSendRoute,
 	DEFAULT_CACHE_CONTROL_HEADER
 } from '@/apiHelpers';
+import { debug } from '@/helpers.js';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -22,10 +23,10 @@ export const POST: RequestHandler = async ({ request }) => {
 	// Check if the user already has an ascent for this route.
 	const ascentRows = await getAscentsSheetRows();
 
-	const ascentIndex = ascentRows?.findIndex((r) => r[1] == username && r[0] == ascent.route_id);
+	const ascentIndex = ascentRows.findIndex((r) => r[1] == username && r[0] == ascent.route_id);
 
-	if (ascentIndex && ascentIndex !== -1) {
-		// If the user does not yet have an ascent, we insert a new record
+	if (ascentIndex !== -1) {
+		// If there is already a record, we write over it
 		await updateAscent(ascentIndex, ascent);
 		return json({ message: 'Updated' }, { status: 200 });
 	}
@@ -62,14 +63,12 @@ export const GET = async ({ url, setHeaders }) => {
 
 export const DELETE = async ({ request }) => {
 	const ascent: Ascent = await request.json();
-
 	const ascentRows = await getAscentsSheetRows();
 
-	const ascentIndex = ascentRows?.findIndex(
+	const ascentIndex = ascentRows.findIndex(
 		(r) => r[1] == ascent.username && r[0] == ascent.route_id
 	);
-
-	if (ascentIndex && ascentIndex !== -1) {
+	if (ascentIndex !== -1) {
 		await unSendRoute(ascentIndex);
 		return json({ message: 'Updated ' }, { status: 200 });
 	}

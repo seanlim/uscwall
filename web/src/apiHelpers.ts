@@ -73,15 +73,18 @@ async function updateRow(value: unknown[], sheetName: string, atIndex: number) {
 }
 
 export async function getAscentsSheetRows() {
-	return getRows(ASCENT_SHEET_NAME, 'A1:E');
+	const rows = await getRows(ASCENT_SHEET_NAME, 'A1:E');
+	return rows ?? [];
 }
 
 export async function getRoutesSheetRows() {
-	return getRows(ROUTES_SHEET_NAME, 'A1:J');
+	const rows = await getRows(ROUTES_SHEET_NAME, 'A1:J');
+	return rows ?? [];
 }
 
 export async function getGradesSheetRows() {
-	return getRows(GRADES_SHEET_NAME, 'A1:A');
+	const rows = getRows(GRADES_SHEET_NAME, 'A1:A');
+	return rows ?? [];
 }
 
 export async function logNewAscent(ascent: Ascent) {
